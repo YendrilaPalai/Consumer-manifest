@@ -1,0 +1,123 @@
+<app-header></app-header>
+<div class="mt-1 mb-1">
+  <button class="btn btn-primary">Back</button>
+</div>
+<div class="qnA-hr-line"></div>
+<div class="container">
+<div>
+  <mat-form-field  appearance="fill" style="width:25%;padding-left: 1%; padding-top: 2%;">
+    <mat-label>Select Data Source</mat-label>
+    <mat-select [formControl]="toppings" multiple
+    (selectionChange)="changeAction($event)" [(ngModel)]="level">
+      <mat-option *ngFor="let domain of domData.domains" [value]="domain">{{domain.domainName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+</div>
+
+<div class="container">
+<div class="parent-div col-12">
+<div class="child-div1 col-6">
+    <mat-accordion class="example-headers-align" multi>
+      <ng-container *ngFor="let domain of selectedDomainName;let i as index">
+        <h4 style="background-color: grey;">{{domain.domainName}}</h4>
+        <form>
+          <div class="mb-3">
+            <!-- <input type="text" class="form-control" id="search-text" aria-describedby="search-text"
+            (ngModelChange)="filterEntityAttributes()" 
+        [(ngModel)]="searchText" placeholder="Search available Entity or Attribute" 
+        autofocus> -->
+        <input type="text" class="form-control"
+            (keyup)="searchEntityAttributes($event,domain)"  placeholder="Search available Entity or Attribute">
+          </div>
+        </form>
+        <mat-expansion-panel [expanded]=false  *ngFor="let entity of domain.entities" [disabled]="entity.entityDisableFlag" hideToggle #panel>
+          <mat-expansion-panel-header >
+            <mat-panel-title>
+                <img *ngIf="panel.expanded" src="../../../assets/dash-circle.svg">
+                <img *ngIf="!panel.expanded" src="../../../assets/plus-circle.svg">
+               &nbsp;{{entity.entityName}}
+            </mat-panel-title>
+            <button *ngIf="entity.entityDisableFlag===false" class="btn btn-primary" [disabled]="entity.entityDisableFlag" (click)="doDomainMappingsAll(domain.domainName,entity.entityId,entity.entityAttributes)">Add All</button>
+            <button *ngIf="entity.entityDisableFlag===true" class="btn btn-success" [disabled]="entity.entityDisableFlag">Added<mat-icon>done</mat-icon></button>
+          </mat-expansion-panel-header>
+            <table mat-table [dataSource]="entity.entityAttributes" class="mat-elevation-z8">
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="attrName">
+                <td mat-cell *matCellDef="let element"> {{element.attrName}} </td>
+              </ng-container>
+            
+              <!-- Weight Column -->
+              <ng-container class="container-style" matColumnDef="position">
+                <td mat-cell *matCellDef="let element" >
+                  <button *ngIf="element.entityAttributeDisableFlag===false" class="btn btn-primary" [disabled]="element.entityAttributeDisableFlag" (click)="addData(element,domain.domainName,entity,entity.entityId,entity.entityAttributes)">Add</button>
+                  <button *ngIf="element.entityAttributeDisableFlag===true" class="btn btn-success" [disabled]="element.entityAttributeDisableFlag">Added<mat-icon>done</mat-icon></button>
+                </td>
+              </ng-container>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </mat-expansion-panel>
+        </ng-container>
+        </mat-accordion>
+</div>
+<div *ngIf="showRightPanel" class="vertical_dotted_line"></div>
+<div *ngIf="showRightPanel" class="child-div2 col-6 pl-2">
+  <mat-accordion class="example-headers-align" multi>
+    <ng-container *ngFor="let domain of addAllDomData;let m as index">
+      <h4 style="background-color:  grey;">{{domain.domainName}}</h4>
+    <mat-expansion-panel *ngFor="let entity of domain.entities;let n as index"  hideToggle #panel1>
+      <mat-expansion-panel-header >
+        <mat-panel-title>
+            <img *ngIf="panel1.expanded" src="../../../assets/dash-circle.svg">
+            <img *ngIf="!panel1.expanded" src="../../../assets/plus-circle.svg">
+           &nbsp;{{entity.entityName}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <table mat-table [dataSource]="entity.entityAttributes" class="mat-elevation-z8">
+          <!-- Name Column -->
+          <ng-container matColumnDef="attrName">
+            <td mat-cell *matCellDef="let element"> {{element.attrName}} </td>
+          </ng-container>
+          <!-- Actions -->
+          <ng-container class="container-style" matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element" >
+              <img id="pastchatview" style="font-size: 1rem;"
+              class="mr-1" src="../../../assets/img/edit.svg">
+              <img id="pastchatview" style="font-size: 1rem;"
+               src="../../../assets/img/delete.svg">
+            </td>
+          </ng-container>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsOne;"></tr>
+        </table>
+      </mat-expansion-panel>
+    <!-- <mat-expansion-panel hideToggle #panel2>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+              <img *ngIf="panel2.expanded" src="../../../assets/dash-circle.svg">
+              <img *ngIf="!panel2.expanded" src="../../../assets/plus-circle.svg">
+              &nbsp;Sports Club
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <table mat-table [dataSource]="dataSource3" class="mat-elevation-z8">
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            </ng-container> 
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>  
+            <ng-container matColumnDef="weight">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let element"><button class="btn btn-danger">Delete</button></td>
+            </ng-container>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+      </mat-expansion-panel> -->
+    </ng-container>
+    </mat-accordion>
+</div>
+</div>
+</div>

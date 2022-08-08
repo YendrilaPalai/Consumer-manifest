@@ -1,0 +1,10 @@
+.manifest-app-hdr {
+    background-color: #003b71;
+    /* width: auto; */
+    height: 60px;
+  }
+  .manifest-header-sticky{
+    top:0;
+    position: sticky !important;
+    z-index: 9999;
+  }

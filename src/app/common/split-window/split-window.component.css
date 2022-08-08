@@ -1,0 +1,41 @@
+.parent-div{
+    display: flex;
+    flex-direction: row;
+    height: 50vh;
+}
+table {
+    width: 100%;
+  }
+.qnA-hr-line{
+    width:auto;
+    border: 1px solid lightseagreen;
+}
+/* .container-style{
+    padding-left: 20px;
+} */
+#pastchatview{
+    border-width: 0;
+    margin-right: 3%;
+    width: 15px;
+    cursor: pointer;
+  }
+.mat-column-position {
+    width: 32px;
+    text-align: center;
+    font-weight: bold;
+  }
+.child-div1{
+  margin-left: 0.8%;
+  /* width: 500px;
+  height: 450px;
+  border: 1px solid blue; */
+}
+.vertical_dotted_line
+{
+    border-left: 1px dotted #003b71;;
+    height: auto;
+} 
+.child-div2{
+    flex-basis: 50%;
+    overflow-y: auto;
+}
