@@ -1,0 +1,33 @@
+/* ::ng-deep .btn {
+  min-width: 15%;
+  max-width: 50%;
+} */
+
+::ng-deep .btn-primary {
+  border-radius: 0px;
+
+  background-color: #003a70;
+}
+
+::ng-deep .btn-success {
+  border-radius: 0px;
+}
+
+::ng-deep .btn-primary:hover {
+  background-color: #003a70;
+
+  border-color: #003a70;
+}
+
+::ng-deep .btn-secondary {
+  border-radius: 0px;
+  background-color: #9a9a9a;
+
+  border: #9a9a9a;
+
+  color: black;
+}
+
+::ng-deep .textAlignment {
+  text-align: center;
+}

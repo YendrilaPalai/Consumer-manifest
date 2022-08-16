@@ -1,0 +1,102 @@
+<app-header></app-header>
+<div class="container-fluid container-size">
+  <div class="row row-pad">
+    <div class="col-4">
+      <div class="card card-size py-2">
+        <img (click)=goToCreatePage()
+          src="../../../assets/img/Create.svg"
+          class="card-img-top"
+          style="cursor: pointer;"
+          alt="..."
+        />
+        <div class="row card-body">
+          <p class="card-text text-center">Create a New Manifest</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card card-size py-2">
+        <img
+          src="../../../assets/img/File upload.svg"
+          class="card-img-top"
+          style="cursor: pointer;"
+          alt="..."
+        />
+        <div class="card-body">
+          <p class="card-text text-center">Import</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card card-size py-2">
+        <img
+          src="../../../assets/img/Settings.svg"
+          class="card-img-top" style= 'filter: opacity(0.4) drop-shadow(0 0 0 #ced4da);cursor: pointer;'
+          alt="..."
+        />
+        <div class="card-body">
+          <p class="card-text text-center" style="color:#ced4da ;">Settings</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid container-size">
+
+  <div class="bg-container">
+    <div class="row row-pad">
+      <div class="col-12">
+        <form [formGroup]="myForm">
+          <div class="row mx-4">
+            <div class="col-4">
+              <input
+                type="text"
+                #searchInput
+                formControlName="search"
+                placeholder="Search a manifest"
+                class="form-control"
+              />
+            </div>
+            <div class="col-4">
+                <select
+                  class="form-select mb-3"
+                  (ngModelChange)="changeSort($event)"
+                  formControlName="sort"
+                >
+                  <option *ngFor="let sortItem of sortLists" [ngValue]="sortItem">
+                    {{ sortItem }}
+                  </option>
+                </select>
+              </div>
+            <div class="col-4">
+              <input
+                type="text"
+                #filterInput
+                formControlName="filter"
+                placeholder="Filter"
+                class="form-control"
+              />
+            </div>
+          
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row row-pad row-collapsed">
+      <div
+        class="col-6 mb-4"
+        *ngFor="let manifest of finalmanifests; let i = index"
+      >
+        <app-card-component [manifestTitle]="manifest"></app-card-component>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

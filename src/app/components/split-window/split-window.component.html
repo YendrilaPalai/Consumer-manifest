@@ -1,0 +1,244 @@
+<app-header></app-header>
+<div class="m-2">
+  <button (click)="onBackClick()" class="btn btn-primary">Back</button>
+</div>
+<div class="qnA-hr-line"></div>
+<div class="container-fluid">
+  <div class="row" style="padding-top: 2%">
+    <div class="col-10">
+      <mat-form-field
+        appearance="fill"
+        class="mat-fieldcss"
+        style="width: 25%; padding-left: 1%"
+      >
+        <mat-label>Select Data Source</mat-label>
+
+        <mat-select
+          [formControl]="toppings"
+          multiple
+          (selectionChange)="changeAction($event)"
+          [(ngModel)]="level"
+        >
+          <mat-option *ngFor="let domain of domData?.domains" [value]="domain">{{
+            domain.domainName
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+     <!-- save and publish div starts here -->
+    <div *ngIf="showRightPanel" class="col-2">
+      <button type="button" disabled class="btn btn-primary">Save</button
+      >&nbsp;&nbsp;
+
+      <button type="button" disabled class="btn btn-primary">Publish</button>
+    </div>
+    <!-- save and publish div ends here -->
+  </div>
+</div>
+
+<div class="container-fluid mt-3">
+  <div class="col-md-12">
+    <div class="row pad-screen">
+        {{selectedDomainName}}
+      <!-- left pannel div code starts from here -->
+      <div *ngIf="selectedDomainName" class="col-md-6 overflow-scrollbar">
+        <div *ngIf="selectedDomainName" class="mb-3">
+          <input
+            type="text"
+            class="form-control" [(ngModel)]="searchText"
+            placeholder="Search available Domains"
+          />
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+          <div
+            class="pad-bottom"
+            *ngFor="let domain of selectedDomainName  | filterpipe:[searchText,'domain']; let i; as: index"
+          >
+            <h4 class="headercss">{{ domain.domainName }}</h4>
+            
+            <div class="containerDesign">
+              <mat-expansion-panel
+                [expanded]="false"
+                *ngFor="let entity of domain.entities"
+                hideToggle
+                #panel
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <img
+                      *ngIf="panel.expanded"
+                      src="../../../assets/dash-circle.svg"
+                    />
+                    <img
+                      *ngIf="!panel.expanded"
+                      src="../../../assets/plus-circle.svg"
+                    />
+                    &nbsp;{{ entity.entityName }}
+                  </mat-panel-title>
+                  <button
+                    *ngIf="entity.entityDisableFlag === false"
+                    class="btn btn-primary"
+                    (click)="onAddAllClick(domain, entity)"
+                  >
+                    Add All
+                  </button>
+                  <button
+                    *ngIf="entity.entityDisableFlag === true"
+                    class="btn btn-success"
+                    [disabled]="entity.entityDisableFlag"
+                  >
+                    Added<mat-icon>done</mat-icon>
+                  </button>
+                </mat-expansion-panel-header>
+                <table
+                  mat-table
+                  [dataSource]="entity.entityAttributes"
+                  class="mat-elevation-z8"
+                >
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="attrName">
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.attrName }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Weight Column -->
+                  <ng-container class="container-style" matColumnDef="position">
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        *ngIf="element.entityAttributeDisableFlag === false"
+                        class="btn btn-primary"
+                        [disabled]="element.entityAttributeDisableFlag"
+                        (click)="onAddClick(element, entity, domain)"
+                      >
+                        Add
+                      </button>
+                      <button
+                        *ngIf="element.entityAttributeDisableFlag === true"
+                        class="btn btn-success"
+                        [disabled]="element.entityAttributeDisableFlag"
+                      >
+                        Added<mat-icon>done</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+                </table>
+              </mat-expansion-panel>
+            </div>
+          </div>
+        </mat-accordion>
+      </div>
+      <!-- left pannel div code ends here -->
+      <div class="col-md-1"></div>
+      <!-- right pannel div code starts from here -->
+      <div
+        *ngIf="showRightPanel"
+        class="col-md-5 containerDesign overflow-scrollbar"
+      >
+        <!-- clearall and selectors label div starts here -->
+        <div class="container-fluid row mb-4">
+          <div class="col-9" style="color: #b4b4b4">Selectors</div>
+
+          <div class="col-3">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="clearAllSelectors()"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+        <!-- clearall and selectors label div ends here -->
+        <!-- no selectors content div starts here -->
+        <div class="container-fluid ">
+        <div *ngIf="showNoDatasourceContent" class="rowmargin">
+          <div class="row col-12">
+            <div class="headercss textAlignment" style="color: #b4b4b4">
+              No DataSource Has been Added
+            </div>
+          </div>
+
+          <div class="row col-12 rowboxcss">
+            <div class="boxcss textAlignment" style="color: #b4b4b4">
+              You have not selected any Table or Column
+            </div>
+          </div>
+        </div>
+        <!-- no selectors content div ends here -->
+        <mat-accordion class="example-headers-align" multi>
+          <ng-container
+            *ngFor="let domain of selectedDomainName; let m; as: index"
+          >
+            <h4
+              *ngIf="domain.displayDomainTargetPanel === true"
+              class="headercss"
+            >
+              {{ domain.domainName }}
+            </h4>
+            <mat-expansion-panel 
+              *ngFor="let entity of domain.entities; let n; as: index"
+              hideToggle
+              #panel1
+              [hidden] = "!entity.displayEntityTargetPanel"
+            >
+              <mat-expansion-panel-header 
+              >
+                <mat-panel-title>
+                  <img
+                    *ngIf="panel1.expanded"
+                    src="../../../assets/dash-circle.svg"
+                  />
+                  <img
+                    *ngIf="!panel1.expanded"
+                    src="../../../assets/plus-circle.svg"
+                  />
+                  &nbsp;{{ entity.entityName }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <table #table class="table table-striped">
+                <tbody *ngFor="let attr of entity.entityAttributes">
+                  <tr *ngIf="attr.entityAttributeDisableFlag === true">
+                    <td>{{ attr.attrName }}</td>
+                    <td>
+                      <span class="circletoimg"
+                        ><img
+                          id="pastchatview"
+                          style="font-size: 1rem"
+                          src="../../../assets/img/edit.svg" /></span
+                      >&nbsp;
+                      <span class="circletoimg"
+                        ><img
+                          (click)="deleteEntityAttribute(attr, entity, domain)"
+                          id="pastchatview"
+                          style="font-size: 1rem"
+                          src="../../../assets/img/delete.svg"
+                      /></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </div>
+      </div>
+      <!-- right pannel div code ends here -->
+    </div>
+    <!-- preview and create manifest div starts here -->
+    <div *ngIf="showRightPanel" class="row justify-content-end">
+      <div class="col-2">
+        <button type="button" disabled class="btn btn-primary">Join</button
+        >&nbsp;&nbsp;
+
+        <button type="button" disabled class="btn btn-primary">Create Manifest</button>
+      </div>
+    </div>
+    <!-- preview and create manifest div ends here -->
+  </div>
+</div>

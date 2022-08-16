@@ -1,0 +1,107 @@
+.parent-div {
+  display: flex;
+  flex-direction: row;
+  height: 50vh;
+}
+
+.circletoimg {
+  border-radius: 50%;
+  border: 3px solid rgb(205, 209, 215);
+  padding: 1%;
+  padding-left: 3%;
+}
+
+.hide {
+  display: none;
+}
+
+table {
+  width: 100%;
+}
+
+.qnA-hr-line {
+  width: auto;
+  border: 1px solid #003a70;
+}
+
+/* .container-style{
+    padding-left: 20px;
+} */
+#pastchatview {
+  border-width: 0;
+  margin-right: 3%;
+  width: 15px;
+  cursor: pointer;
+}
+
+.mat-column-position {
+  width: 32%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.child-div1 {
+  margin-left: 0.8%;
+  /* width: 500px;
+  height: 450px;
+  border: 1px solid blue; */
+}
+
+.vertical_dotted_line {
+  border-left: 1px dotted #003b71;
+  height: auto;
+}
+
+.child-div2 {
+  flex-basis: 50%;
+  overflow-y: auto;
+}
+
+.pad-bottom {
+  margin-bottom: 16px;
+}
+
+.containerDesign {
+  border: 2px solid #31618c;
+  padding: 8px;
+}
+
+.overflow-scrollbar {
+  overflow-y: auto;
+  height: 56vh;
+  overflow-x: hidden;
+}
+.overflow-scrollbar2 {
+  overflow-y: auto;
+  height: 44h;
+  overflow-x: hidden;
+}
+
+.pad-screen {
+  padding-left: 16px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+}
+
+.headercss {
+  background-color: #e7f0f9;
+  padding: 10px;
+}
+
+::ng-deep .mat-form-field-flex {
+  border: 2px solid #31618c !important;
+  border-radius: 0px !important;
+}
+.boxcss {
+  padding: 25px;
+}
+
+.rowboxcss {
+  border: 30px solid #e7f0f9;
+  margin-top: 5%;
+}
+
+.rowmargin {
+  margin-left: 6%;
+  margin-right: 3%;
+}

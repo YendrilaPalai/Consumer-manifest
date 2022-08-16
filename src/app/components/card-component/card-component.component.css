@@ -1,0 +1,10 @@
+.small-card-size{
+    border-radius: 0 !important;
+    /* height: 20vh !important; */
+}
+.text-alignment{
+float: right;
+}
+.card-img-top{
+    height: 17vh;
+}

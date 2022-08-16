@@ -1,0 +1,52 @@
+.container-size{
+    padding-left: 48px;
+    padding-right: 48px;
+}
+
+.card-size{
+    border-radius: 0 !important;
+    height: 18vh !important;
+}
+
+.card-img-top{
+    height: 7vh !important;
+}
+.card-img-topp{
+    height: 7vh !important;
+    width: 38px;
+
+}
+.row-pad{
+  padding-top: 32px;
+}
+.bg-container{
+    background-color: white;
+    margin-top:32px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.row-collapsed{
+    margin-right: 32px;
+    margin-left: 32px;
+    height: 51vh;
+    overflow: auto;
+    padding-bottom: 20px;
+}
+
+.form-control , .form-select{
+    border: 1px solid #094a8a;
+    border-radius: 0rem;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    overflow-y: scroll;
+    background: grey;
+    box-shadow: inset 0 0 4px #707070;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #005587 ;
+    border-radius: 10px;
+}
