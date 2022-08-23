@@ -20,7 +20,11 @@ import { FilterpipePipe } from './common/filterpipe.pipe';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { CardComponentComponent } from './components/card-component/card-component.component';
 import { SplitWindowComponent } from './components/split-window/split-window.component';
-
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
+import { FilterComponent } from './components/filter/filter.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +35,8 @@ import { SplitWindowComponent } from './components/split-window/split-window.com
     HeaderComponent,
     FilterpipePipe,
     HomePageComponent,
-    CardComponentComponent
+    CardComponentComponent,
+    FilterComponent
   ],
   imports: [
     BrowserModule,
@@ -40,10 +45,14 @@ import { SplitWindowComponent } from './components/split-window/split-window.com
     BrowserAnimationsModule,
     MatExpansionModule,
     MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
     FormsModule, 
     ReactiveFormsModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
+    MatButtonToggleModule
   ],
   providers: [{ provide: Requestor, useValue: new FetchRequestor()},
     { provide: 'AuthorizationConfig', useValue: environment},AuthorizationService],

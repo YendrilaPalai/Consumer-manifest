@@ -5,8 +5,7 @@
 }
 
 .circletoimg {
-  border-radius: 50%;
-  border: 3px solid rgb(205, 209, 215);
+  border: 2px solid rgb(223 227 233);
   padding: 1%;
   padding-left: 3%;
 }
@@ -68,12 +67,17 @@ table {
 
 .overflow-scrollbar {
   overflow-y: auto;
-  height: 56vh;
+
+  height: 50vh;
+
   overflow-x: hidden;
 }
+
 .overflow-scrollbar2 {
   overflow-y: auto;
-  height: 44h;
+
+  height: 44vh;
+
   overflow-x: hidden;
 }
 

@@ -8,6 +8,7 @@ import {
   debounceTime,
   distinctUntilChanged,
 } from 'rxjs';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-home-page',
@@ -22,59 +23,18 @@ export class HomePageComponent implements OnInit {
   @ViewChild('filterInput', { static: true }) filterInput: ElementRef;
 
   
-  sortLists: any = ['Sort By', 'Name', 'Date'];
+  sortLists: any = ['Sort By', 'Name'];
 
-  constructor(private route:Router) {}
+  constructor(private route:Router,private _apiService: ApiService,) {}
   finalmanifests: any[] = [];
-  manifests: any[] = [
-    {
-      name: 'Manifest1',
-      date: '25/07/2022'
-    },
-    {
-      name: 'Nanifest2',
-      date: '27/07/2022'
 
-    },
-    {
-      name: 'Nanifest3',
-      date: '25/07/2021'
-
-    },
-    {
-      name: 'Fanifest4',
-      date: '21/07/2020'
-
-    },
-    {
-      name: 'Ganifest5',
-      date: '25/01/2022'
-
-    },
-    {
-      name: 'Manifest6',
-      date: '12/06/2022'
-
-    },
-    {
-      name: 'Aanifest7',
-      date: '15/02/2016'
-
-    },
-    {
-      name: 'Manifest8',
-      date: '25/07/2022'
-
-    },
-    {
-      name: 'Manifest9',
-      date: '15/04/2022'
-
-    },
-  ];
+  manifests: any[] = [];
 
   ngOnInit(): void {
-    this.finalmanifests = this.manifests;
+    this._apiService.getAllManifest().subscribe((response: any) => {
+      this.manifests = response;
+      this.finalmanifests = this.manifests;
+    });
     this.myForm = new FormGroup({
       search: new FormControl(''),
       filter: new FormControl(''),
@@ -95,7 +55,7 @@ export class HomePageComponent implements OnInit {
       .subscribe((text: string) => {
         console.log(text, 'text');
         this.searchResult = this.manifests.filter((filtered) =>
-          filtered.name.includes(text)
+          filtered.consName.includes(text)
         );
 
         console.log(this.searchResult);
@@ -125,7 +85,7 @@ export class HomePageComponent implements OnInit {
       .subscribe((text: string) => {
         console.log(text, 'text');
         this.searchResult = this.manifests.filter((filtered) =>
-          filtered.name.includes(text)
+          filtered.consName.includes(text)
         );
 
         console.log(this.searchResult);
@@ -146,7 +106,7 @@ export class HomePageComponent implements OnInit {
     this.finalmanifests=[]
     if (e === "Name") {
       let searchResultBySort = this.manifests?.sort((a, b) =>
-        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        a.consName.toLowerCase().localeCompare(b.consName.toLowerCase())
       );
       console.log(searchResultBySort);
       this.finalmanifests = searchResultBySort;

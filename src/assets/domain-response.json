@@ -21,6 +21,7 @@
               "attrComment": "rds_feature_store",
               "attrLength": 0,
               "position": 1,
+              "dataType": "string",
               "colGrpName": "uniqueMsgId",
               "colGrpLvl": "EVE",
               "entityAttributesMaps": []
@@ -31,6 +32,7 @@
               "attrDesc": "source",
               "attrComment": "rds_feature_store",
               "attrLength": 0,
+              "dataType": "number",
               "position": 2,
               "colGrpName": "source",
               "colGrpLvl": "EVE",
@@ -41,6 +43,7 @@
               "attrName": "class",
               "attrDesc": "class",
               "attrComment": "rds_feature_store",
+              "dataType": "date",
               "attrLength": 0,
               "position": 3,
               "colGrpName": "Type",
@@ -592,6 +595,7 @@
               "attrComment": "rds_feature_store",
               "attrLength": 0,
               "position": 1,
+              "dataType": "string",
               "colGrpName": "uniqueMsgId",
               "colGrpLvl": "EVE",
               "entityAttributesMaps": []
@@ -602,6 +606,7 @@
               "attrDesc": "source",
               "attrComment": "rds_feature_store",
               "attrLength": 0,
+              "dataType": "number",
               "position": 2,
               "colGrpName": "source",
               "colGrpLvl": "EVE",
@@ -615,6 +620,7 @@
               "attrLength": 0,
               "position": 3,
               "colGrpName": "Type",
+              "dataType": "date",
               "colGrpLvl": "EVE",
               "entityAttributesMaps": []
             },

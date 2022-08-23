@@ -1,0 +1,7 @@
+{
+    "listofdatatype" : [
+        {"type": "string", "image": "src/assets/img/Character.svg","operators": ["IN", "BETWEEN-AND", "IS NULL", "LIKE"]},
+        {"type": "number", "image": "src/assets/img/NUMBER.svg","operators": [">", "<", "==", "!=", ">=", "<="]},
+        {"type": "date", "image": "src/assets/img/Calendar today.svg","operators": [">", "<", "==", "!=", ">=", "<="]}
+    ]
+}

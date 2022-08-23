@@ -1,0 +1,162 @@
+<!-- <h2 mat-dialog-title>Add Filter</h2> -->
+<mat-dialog-content class="mat-typography">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-9" style="color: #003b71">
+        <strong>Add Filter</strong>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="container-fluid containerDesign">
+        <div class="row">
+          <div class="col-md-6">
+            <div
+              class="card card-height card-border"
+              (click)="clickOnSimple()"
+              [ngClass]="simpleTabClicked === true ? 'blueClass' : ''"
+            >
+              <div class="card-text">Basic</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="card card-height card-border"
+              (click)="clickOnManual()"
+              [ngClass]="manualTabClicked === true ? 'blueClass' : ''"
+            >
+              <div class="card-text">Advanced</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <!-- form started -->
+
+          <div class="container-fluid background-container">
+            <div class="row justify-content-center pb-3" *ngIf="addClicked && !onEditClicked">
+              <div class="col-md-6">
+                <div
+                  class="card card-height card-border" >
+                  <div class="card-text">{{showthePrevOperation}}</div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row justify-content-center" *ngIf="addClicked">
+              <div class="col-md-6 text-center">
+
+
+                <!-- <ul class="nav nav-pills justify-content-center">
+                  <li class="nav-item">
+                    <a  id="home-tab" data-toggle="tab" (click)="changeActiveTab('AND')" >AND</a>
+                  </li>
+                  <li class="nav-item">
+                    <a  id="profile-tab" data-toggle="tab" (click)="changeActiveTab('OR')">OR</a>
+                  </li>
+                  </ul> -->
+                  <mat-button-toggle-group [(ngModel)]="selectedOperator" (ngModelChange)="changeActiveTab($event)" aria-label="Font Style">
+                    <mat-button-toggle value="AND">AND</mat-button-toggle>
+                    <mat-button-toggle value="OR">OR</mat-button-toggle>
+                  </mat-button-toggle-group>
+<!-- 
+                <button type="button" class="btn btn-outline-primary"  >AND</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-outline-primary">OR</button> -->
+              </div>
+            </div>
+
+
+
+
+            <form [formGroup]="myForm">
+              <div class="row">
+                <div class="col-4">
+                  <label>Select a Data Source</label>
+
+                  <select
+                    class="form-control mb-3"
+                    formControlName="datasource"
+                    (change)="onchangedatasource($event)"
+
+                  >
+                  <option disabled selected value="">- Select a Data Source -</option>
+                    <option
+                      *ngFor="let domain of datasourceList"
+                      [ngValue]="domain.domainName"
+                    >
+                      {{ domain.domainName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                  <label>Select a Entity</label>
+
+                  <select class="form-control mb-3" formControlName="table" (change)="onchangetable($event)">
+                    <option disabled selected value="">- Select a Entity -</option>
+                    <option
+                      *ngFor="let entity of entityList"
+                      [ngValue]="entity.entityName">
+                      {{ entity.entityName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-4">
+                    <label >Select a Attribute</label>
+  
+                    <select class="form-control mb-3" formControlName="column">
+                      <option disabled selected value="">- Select a Attribute -</option>
+                      <option
+                        *ngFor="let attr of entityAttrList"
+                        [ngValue]="attr.attrName"
+                      >
+                        {{ attr.attrName }}
+                      </option>
+                    </select>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <label>Select a Operator</label>
+                  <select class="form-control mb-3"  formControlName="operation">
+                    <option disabled selected value="">- Select a Operator -</option>
+                    <option
+                      *ngFor="let sortItem of operations"
+                      [ngValue]="sortItem"
+                    >
+                      {{ sortItem }}
+                    </option>
+                  </select>
+
+                </div>
+                <div class="col-6">
+                  <label for="number" style="color: #b4b4b4"
+                    >Min 0.5, Max 5</label
+                  >
+                  <input
+                    type="number"
+                    formControlName="minmax"
+                    placeholder=""
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- end -->
+        </div>
+
+        <div class="row justify-content-center" style="margin-top: 32px;">
+          <div class="col-12 text-center">
+            <button type="button" class="btn btn-primary" (click)="onClear()">Clear</button
+            >&nbsp;&nbsp;
+            <button type="button"  class="btn btn-primary" [disabled]="!myForm.valid" (click)="onClickAddButton()">{{button}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="btn btn-primary mt-3" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

@@ -1,0 +1,51 @@
+.containerDesign {
+  border: 2px solid #31618c;
+  padding: 24px;
+}
+
+.card-border {
+  border: 1px solid #003b71;
+}
+
+.card-text {
+  text-align: center;
+  padding: 8px;
+}
+.card-height {
+  border-radius: 0;
+  border-color: 2px solid #003b71;
+  cursor: pointer;
+}
+.blueClass {
+  background-color: #003b71;
+  color: white;
+}
+
+.background-container {
+  background-color: #827f7f0f;
+  margin-top: 44px;
+  padding: 24px;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid #094a8a;
+  border-radius: 0rem;
+}
+.mat-button-toggle{
+  background-color: white;
+  color:black;
+  border: 2px solid  #094a8a;;
+}
+
+/* .mat-button-toggle:hover {
+  background-color: transparent;
+  color: #1100ff !important;    
+} */
+
+.mat-button-toggle-checked {
+  background-color: #094a8a;;
+  color: white;
+}
