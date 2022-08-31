@@ -1,0 +1,15 @@
+.form-control{
+    line-height: 2.5;
+    border:2px solid #003c70;
+}
+
+select .form-control{
+    line-height: 2.5;
+    border:2px solid #003c70;
+}
+
+select.form-control:not([size]):not([multiple]) {
+    height: 56px;
+    line-height: 2.5;
+    border:2px solid #003c70;
+}

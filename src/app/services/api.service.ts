@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
-
+import {env} from 'src/environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
@@ -23,6 +23,11 @@ export class ApiService {
   errorHandler(error: HttpErrorResponse) {
     return throwError(error.message || 'Server Error');
   }
+
+  // getDomainData() {
+  //   const getDomainsUrl: string = `${env.API_URL+env.api+env.version+env.domains+env.getDomains}`;
+  //   return this.httpClient.get(getDomainsUrl);
+  // }
 
   public getDomainData(): Observable<any> {
     return this.httpClient

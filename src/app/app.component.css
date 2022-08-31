@@ -10,8 +10,11 @@
 
 ::ng-deep .btn-primary:hover {
   background-color: #003a70;
-
   border-color: #003a70;
+}
+
+::ng-deep select{
+  -webkit-appearance: listbox !important
 }
 
 ::ng-deep .btn-secondary {

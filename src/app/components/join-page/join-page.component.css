@@ -1,0 +1,209 @@
+.not-active{
+  /* border : 1px solid black; */
+  /* padding : 1rem; */
+  cursor: pointer;
+}
+.lab-sty{
+
+  color: black;
+}
+.lab-sty-inner{
+  margin-left: 7%;
+      color: black;
+    }
+.blueClass{
+
+  background-color: #003b71;
+
+}
+
+.button-style{
+
+ margin-left: 70%;
+
+}
+.containerDesign {
+  border: 2px solid #31618c;
+  padding: 24px;
+}
+
+.card-border {
+  border: 1px solid #003b71;
+}
+.card-border-middle{
+  border: 1px solid #003b71;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+::ng-deep .textAlignment {
+  text-align: center;
+}
+.boxcss {
+  padding: 25px;
+}
+.rowboxcss {
+  border: 30px solid #e7f0f9;
+  margin-top: 5%;
+}
+
+.rowmargin {
+  margin-left: 2%;
+  /* margin-right: 0%; */
+}
+.headercss {
+  background-color: #e7f0f9;
+  padding: 10px;
+  
+}
+
+.card-text {
+  text-align: center;
+  padding: 8px;
+}
+.card-height {
+  border-radius: 0;
+  border-color: 2px solid #003b71;
+  cursor: pointer;
+}
+.blueClass {
+  background-color: #003b71;
+  color: white;
+}
+
+.background-container {
+  background-color: #827f7f0f;
+  margin-top: 44px;
+  padding: 24px;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid #094a8a;
+  border-radius: 0rem;
+}
+.mat-button-toggle{
+  background-color: white;
+  color:black;
+  /* border: 2px solid  #094a8a;; */
+}
+
+/* .mat-button-toggle:hover {
+  background-color: transparent;
+  color: #1100ff !important;    
+} */
+
+.mat-button-toggle-checked {
+  background-color: #094a8a;;
+  color: white;
+}
+.qnA-hr-line {
+  width: auto;
+  border: 1px solid #003a70;
+}
+#even {
+  min-height: 50px;
+  /* background: orange; */
+}
+
+.example-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* .overflow-scrollbar {
+  overflow-y: auto;
+
+  height: 25vh;
+
+  overflow-x: hidden;
+} */
+.overflow-scrollbar-right{
+  overflow-y: auto;
+
+  height: 75vh;
+
+  overflow-x: hidden;
+}
+.example-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  /* border-radius: 4px;s */
+  /* overflow: hidden; */
+  /* overflow-x: hidden; */
+  /* overflow-y: scroll; */
+  display: block;
+}
+.source-list {
+  border: solid 1px #ccc;
+  min-height: 35px;
+  background: white;
+  /* text-align: center; */
+  padding-top: 2%;
+  padding-left: 2%;
+  /* border-radius: 4px; */
+  overflow: hidden;
+  display: block;
+}
+.example-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+
+#even.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  display: none;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mat-button-toggle-checked {
+background-color: #094a8a;;
+color: white;
+}
+
+.spancolor{
+  background-color: #2195ff;
+  padding: 16px;
+  margin-right: 6px;
+  color:white;
+}
+.dragTable{
+margin-left: auto;
+margin-right: auto;
+}

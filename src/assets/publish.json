@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Manifest_1",
+    "schedule": "yearly",
+    "publish": "Published every year on first Monday of January until 12/23/2022 at 12.00",
+    "status": true
+  },
+  {
+    "id": 2,
+    "name": "Manifest_1",
+    "schedule": "hourly",
+    "publish": "Published on 12/23/2022 at 12.00",
+    "status": true
+  },
+  {
+    "id": 3,
+    "name": "Gyanifest_1",
+    "schedule": "00*/6?**",
+    "publish": "Every 6 hours",
+    "status": true
+  },
+  {
+    "id": 4,
+    "name": "Nanifest_1",
+    "schedule": "Not Scheduled",
+    "publish": "Not available",
+    "status": false
+  },
+  {
+    "id": 5,
+    "name": "Manifest_1",
+    "schedule": "Not Scheduled",
+    "publish": "Not available",
+    "status": false
+  },
+  {
+    "id": 6,
+    "name": "Manifest_1",
+    "schedule": "Not Scheduled",
+    "publish": "Not available",
+    "status": false
+  }
+]

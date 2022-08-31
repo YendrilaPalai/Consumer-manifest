@@ -1,0 +1,46 @@
+<mat-dialog-content>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <div class="col-1">
+        <button
+          mat-icon-button
+          class="close-button mb-4"
+          [mat-dialog-close]="true"
+        >
+          <mat-icon class="close-icon" color="warn">close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form>
+          <div class="row">
+            <div class="col-8">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="FileName"
+                name="filename"
+                [(ngModel)]="fileName"
+              />
+            </div>
+            <div class="col-4">
+              <select class="form-control mb-3 dropdown" [(ngModel)]="typeOfFormat" (change)="onChangeTypeOfFile($event)">
+                <option disabled selected value="">Save as</option>
+                <option value="pdf">PDF</option>
+                <option value="csv">CSV</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="margin-top: 40px">
+    <div class="row justify-content-center">
+     
+        <button type="button" class="btn btn-success col-8" (click)="saveFileDetails()" style="background-color: #00a907;">Save</button>
+    
+    </div>
+  </div>
+</mat-dialog-content>

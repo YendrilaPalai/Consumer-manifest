@@ -124,4 +124,8 @@ export class HomePageComponent implements OnInit {
   goToCreatePage(){
 		this.route.navigate(['/createManifest']); // navigate to other page
 	}
+
+  goToPublishPage(){
+    this.route.navigate(['/publish']);
+  }
 }

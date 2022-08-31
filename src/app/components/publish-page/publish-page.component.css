@@ -1,0 +1,35 @@
+.qnA-hr-line {
+  width: auto;
+  border: 1px solid #003a70;
+}
+
+.search-style {
+  width: 40%;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: contents;
+}
+.dropdown-style {
+  width: 80%;
+}
+.headercss {
+  background-color: #e7f0f9;
+  padding: 10px;
+}
+table {
+  width: 90%;
+  margin-left: 5%;
+}
+
+.overflow-scrollbar {
+  overflow-y: auto;
+
+  height: 77vh;
+
+  overflow-x: hidden;
+}

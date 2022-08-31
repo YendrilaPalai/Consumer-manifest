@@ -10,6 +10,8 @@ export interface Filter {
    condition: any
    screen: string
    expression: string
+   columnCalName:string
+   columnFormula:string
 }
 //operator for operators sign, condition is the last box after operator,
 // screen is the type of screen like manual or simple

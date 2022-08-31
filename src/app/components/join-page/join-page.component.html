@@ -1,0 +1,356 @@
+<div class="m-2">
+  <button (click)="onBackClick()" class="btn btn-primary">Back</button>
+</div>
+<div class="qnA-hr-line"></div>
+
+<!-- <div class="justify-content-center">Float left on viewports sized MD (medium) or wider</div><br> -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-9 mt-3 mt-3" style="color: #003b71">
+      <strong>Add Join</strong>
+    </div>
+  </div>
+  <div class="row container-fluid mt-3">
+    <div class="row gx-5">
+      <div class="col-3">
+        <div class="p-3 containerDesign overflow-scrollbar-right">
+          <label>Drag a Table </label>
+
+          <div *ngFor="let source of selectedDomain">
+            <div
+              class="source-list"
+              style="background-color: #e7f0f9"
+              *ngIf="source.displayDomainTargetPanel == true"
+            >
+              <strong>{{ source.domainName }}</strong>
+            </div>
+            <div *ngIf="source.displayDomainTargetPanel == true">
+              <div
+                id="leftDragTableData"
+                cdkDropList
+                [cdkDropListData]="source.entities"
+                [cdkDropListConnectedTo]="[doneList, exampleList]"
+                class="example-list"
+                (cdkDropListDropped)="dropTableData($event)"
+                [cdkDropListEnterPredicate]="noReturnPredicate"
+              >
+                <div
+                  class="example-box"
+                  *ngFor="let ent of source.entities"
+                  [cdkDragData]="ent"
+                  cdkDrag
+                >
+                  {{ ent.entityName }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-9">
+        <div class="p-3 containerDesign overflow-scrollbar-right">
+          <div class="rowmargin">
+            <div class="row col-12">
+              <div class="headercss" style="color: #b4b4b4">
+                <div class="row" style="margin-left: 1px; margin-right: 1px">
+                  <div class="col-md-6">
+                    <div class="lab-sty">{{ domainnameforLeft }}</div>
+                    <div class="card card-height card-border">
+                      <div
+                        #doneList="cdkDropList"
+                        cdkDropList
+                        [cdkDropListSortingDisabled]="true"
+                        [cdkDropListData]="leftDragTableData"
+                        cdkDropListConnectedTo="leftDragTableData"
+                        class="example-list"
+                        (cdkDropListDropped)="dropTableData($event)"
+                        [cdkDropListEnterPredicate]="evenPredicate"
+                      >
+                        <div
+                          class="example-box"
+                          *ngFor="let dataSource1 of leftDragTableData"
+                          cdkDrag
+                          [cdkDragData]="dataSource1"
+                        >
+                          {{ dataSource1.entityName }}
+                        </div>
+                      </div>
+                    </div>
+                    <small *ngIf="errorFlag" class="text-danger"
+                      >*Both are same table. Please select two different table
+                      to process.</small
+                    >
+                  </div>
+                  <div class="col-md-6">
+                    <div class="lab-sty">{{ domainnameforRight }}</div>
+                    <div class="card card-height card-border">
+                      <div
+                        cdkDropList
+                        #exampleList="cdkDropList"
+                        [cdkDropListSortingDisabled]="true"
+                        [cdkDropListData]="rightDragTableData"
+                        cdkDropListConnectedTo="rightDragTableData"
+                        class="example-list"
+                        (cdkDropListDropped)="dropTableData($event)"
+                        [cdkDropListEnterPredicate]="evenPredicate"
+                      >
+                        <div
+                          class="example-box"
+                          *ngFor="let dataSource2 of rightDragTableData"
+                          cdkDrag
+                          [cdkDragData]="dataSource2"
+                        >
+                          {{ dataSource2.entityName }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <form [formGroup]="myJoinForm">
+                  <div
+                    class="row card-border mb-3"
+                    style="margin-left: 1%; margin-right: 1%"
+                  >
+                    <div class="row">
+                      <div class="col-4">
+                        <label class="pt-3 lab-sty"
+                          >{{ leftTableNameShowHtml }}-Column</label
+                        >
+                        <select
+                          class="form-control mb-3"
+                          formControlName="leftcolumn"
+                        >
+                          <option disabled selected value="">
+                            Select Column
+                          </option>
+                          <option
+                            *ngFor="let col of leftcolumnList"
+                            [ngValue]="col.attrName"
+                          >
+                            {{ col.attrName }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="pt-3 lab-sty">Filter</label>
+                        <select
+                          class="form-control mb-3"
+                          formControlName="operation"
+                        >
+                          <option disabled selected value="">Operation</option>
+                          <option
+                            *ngFor="let sortItem of operations"
+                            [ngValue]="sortItem"
+                          >
+                            {{ sortItem }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="pt-3 lab-sty"
+                          >{{ rightTableNameShowHtml }}-Column</label
+                        >
+                        <select
+                          class="form-control mb-3"
+                          formControlName="rightcolumn"
+                        >
+                          <option disabled selected value="">
+                            Select Column
+                          </option>
+                          <option
+                            *ngFor="let colu of rightcolumnList"
+                            [ngValue]="colu.attrName"
+                          >
+                            {{ colu.attrName }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="container-fluid mb-3">
+                      <div class="row justify-content-center">
+                        <mat-button-toggle-group
+                          formControlName="joinoptions"
+                          (ngModelChange)="changeActiveTab($event)"
+                          aria-label="Font Style"
+                        >
+                          <mat-button-toggle
+                            value="Full Outer"
+                            class="col-2"
+                            style="margin-left: 5%; margin-bottom: 2%"
+                          >
+                            <img
+                              style="width: 70px"
+                              src="../../../assets/img/FullOuter.svg"
+                            />
+                            <div><label>Full Outer</label></div>
+                          </mat-button-toggle>
+                          <div class="col-1"></div>
+
+                          <mat-button-toggle
+                            value="Inner"
+                            class="col-2"
+                            style="margin-bottom: 2%"
+                          >
+                            <img
+                              style="width: 70px"
+                              src="../../../assets/img/Inner.svg"
+                            />
+                            <div><label>Inner</label></div>
+                          </mat-button-toggle>
+                          <div class="col-1"></div>
+
+                          <mat-button-toggle
+                            value="Left Outer"
+                            class="col-2"
+                            style="margin-bottom: 2%"
+                            ><img
+                              style="width: 70px"
+                              src="../../../assets/img/Left Outer.svg"
+                            />
+                            <div><label>Left Outer</label></div>
+                          </mat-button-toggle>
+                          <div class="col-1"></div>
+
+                          <mat-button-toggle
+                            value="Right Outer"
+                            class="col-2"
+                            style="margin-bottom: 2%"
+                          >
+                            <img
+                              style="width: 70px"
+                              src="../../../assets/img/Right Outer.svg"
+                            />
+                            <div>
+                              <label>Right Outer</label>
+                            </div>
+                          </mat-button-toggle>
+                        </mat-button-toggle-group>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="float-right">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="onClear()"
+                    >
+                      Clear</button
+                    >&nbsp;&nbsp;
+
+                    <button
+                      *ngIf="!editClicked"
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="onClickAddButton()"
+                      [disabled]="myJoinForm.invalid"
+                    >
+                      {{ button }}
+                    </button>
+                    <button
+                      *ngIf="editClicked"
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="onClickUpdateButton()"
+                      [disabled]="myJoinForm.invalid"
+                    >
+                      {{ button }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="row col-12 rowboxcss">
+              <div
+                *ngIf="!dataFlag"
+                class="boxcss textAlignment"
+                style="height: 10vh; overflow-y: auto; color: #b4b4b4"
+              >
+                You have not made any Join Operations yet
+              </div>
+              <!--Table added to show data-->
+              <div
+                class="container-fluid"
+                *ngIf="prevoperation.length>0 && dataFlag"
+                style="height: 16vh; overflow-y: auto"
+              >
+                <table 
+                  #table
+                  class="table table-light table-striped"
+                  style="margin-top: 2%"
+                >
+                  <tbody
+                    class="tbodycss"
+                    *ngFor="let op of prevoperation; let i = index"
+                  >
+                    <tr>
+                      <td
+                        style="max-width: 590px; word-wrap: break-word"
+                        class=""
+                      >
+                        <span class="spancolor"
+                          >{{ op.tableleft.entityName }} |
+                          {{ op.columnleft.attrName }}</span
+                        >
+                        <span class="spancolor">
+                          <img
+                            *ngIf="op.joinCondition == 'Full Outer'"
+                            style="width: 70px"
+                            src="../../../assets/img/FullOuter.svg"
+                          />
+                          <img
+                            *ngIf="op.joinCondition == 'Inner'"
+                            style="width: 70px"
+                            src="../../../assets/img/Inner.svg"
+                          />
+                          <img
+                            *ngIf="op.joinCondition == 'Left Outer'"
+                            style="width: 70px"
+                            src="../../../assets/img/Left Outer.svg"
+                          />
+                          <img
+                            *ngIf="op.joinCondition == 'Right Outer'"
+                            style="width: 70px"
+                            src="../../../assets/img/Right Outer.svg"
+                          />
+                        </span>
+
+                        <span class="spancolor"
+                          >{{ op.tableright.entityName }} |
+                          {{ op.columnright.attrName }}</span
+                        >
+                        <span class="spancolor">{{ op.operator }}</span>
+                      </td>
+
+                      <td>
+                        <span class="circletoimg"
+                          ><img
+                            (click)="onClickEditJoin(op)"
+                            id="pastchatview"
+                            style="font-size: 1rem; height: 3vh"
+                            src="../../../assets/img/edit.svg" /></span
+                        >&nbsp;
+
+                        <span class="circletoimg"
+                          ><img
+                            (click)="onClickDeleteJoin(op)"
+                            id="pastchatview"
+                            style="font-size: 1rem; height: 3vh"
+                            src="../../../assets/img/delete.svg"
+                        /></span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,16 @@ export const environment: AuthorizationConfig & GeneralEnvironmentInfo  = {
   extras: { 'access_type': 'offline'},
 };
 
+export const env = {
+  production: false,
+  API_DEV_URL:'http://csc2cwp00001266.cloud.kp.org:1111',
+  API_URL:'http://localhost:1111',
+  api:'/api',
+  version:'/v1',
+  domains:'/domains',
+  getDomains:'/getDomains',
+}
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

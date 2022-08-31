@@ -1,6 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Filter } from 'src/app/interface/filter-interface';
+import {
+  Domainn,
+  Entity,
+  EntityAttribute,
+} from 'src/app/interface/split-interface';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -12,7 +18,8 @@ export class FilterComponent implements OnInit {
   simpleTabClicked: boolean = true;
   manualTabClicked: boolean = false;
   myForm: FormGroup;
-  operations: any = ['>', '<', '==', '!=', '>=', '<='];
+  advancedTabForm: FormGroup;
+  operations: any = [];
   datasourceList: any[] = [];
   entityList: any[] = [];
   entityAttrList: any[] = [];
@@ -27,18 +34,20 @@ export class FilterComponent implements OnInit {
   tab: any;
   button: any = 'Add';
   filterRowdata: any;
+  listofdatatype: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<FilterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _apiService: ApiService,
+    private _apiService: ApiService
   ) {
     dialogRef.disableClose = true;
   }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log(this.data.prevoperation);
     this.formIntitialization();
+    this.advancedTabFormIntitialization();
     this.myForm.controls['table'].disable();
     this.myForm.controls['column'].disable();
     this.data.sourcedata.forEach((domain: any) => {
@@ -61,10 +70,14 @@ export class FilterComponent implements OnInit {
       this.button = 'Update';
       this.editClicked();
     }
-    // this._apiService.getDataTypes().subscribe((response: any) => {
-    //   console.log('data', response.listofdatatype);
-    //   this.listofdatatype = response.listofdatatype;
-    // });
+    this.getDataTypes();
+  }
+
+  getDataTypes(){
+    this._apiService.getDataTypes().subscribe((response: any) => {
+      console.log('data', response.listofdatatype);
+      this.listofdatatype = response.listofdatatype;
+    });
   }
 
   onNoClick(): void {
@@ -74,11 +87,13 @@ export class FilterComponent implements OnInit {
   clickOnSimple() {
     this.simpleTabClicked = true;
     this.manualTabClicked = false;
+    this.formIntitialization();
   }
 
   clickOnManual() {
     this.manualTabClicked = true;
     this.simpleTabClicked = false;
+    this.advancedTabFormIntitialization();
   }
   onchangedatasource($event: any) {
     let text = $event.target?.options[$event.target.options.selectedIndex].text
@@ -118,19 +133,47 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  onClickAddButton() {
-    let datasource = this.myForm.get('datasource')?.value;
-    let table = this.myForm.get('table')?.value;
-    let column = this.myForm.get('column')?.value;
-    let operation = this.myForm.get('operation')?.value;
-    let minmax = this.myForm.get('minmax')?.value;
-    let sendTheString: string =
-      datasource + ',' + table + ',' + column + ',' + operation + ',' + minmax;
-    let newString: string = this.andOrData + ',' + sendTheString;
+  onChangeColumn($event: any) {
+    let text = $event.target?.options[$event.target.options.selectedIndex].text
+      ? $event.target.options[$event.target.options.selectedIndex].text
+      : $event;
+    console.log('textcol', text);
+    this.operations = [];
+    let filterAttr = this.entityAttrList.filter(
+      (a: any) => a.attrName === text
+    );
+    this._apiService.getDataTypes().subscribe((response: any) => {
+      console.log('data', response.listofdatatype);
+      this.listofdatatype = response.listofdatatype;
+      this.listofdatatype.forEach((eachDataType: any) => {
+        if (eachDataType.type === filterAttr[0].dataType) {
+          this.operations = eachDataType.operators;
+        }
+      });
+    });
+  }
 
-    console.log(newString, 'newString', sendTheString);
+  onClickAddButton() {
+    let filterdata = {} as Filter;
+    filterdata.datasource = {} as Domainn;
+    filterdata.table = {} as Entity;
+    filterdata.column = {} as EntityAttribute;
+    filterdata.screen = this.simpleTabClicked ?  "basic" : "Advanced";
+    if(this.simpleTabClicked){
+    filterdata.datasource.domainName = this.myForm.get('datasource')?.value;
+    filterdata.table.entityName = this.myForm.get('table')?.value;
+    filterdata.column.attrName = this.myForm.get('column')?.value;
+    filterdata.operator = this.myForm.get('operation')?.value;
+    filterdata.condition = this.myForm.get('condition')?.value;
+    filterdata.expression = this.selectedOperator;
+    console.log(filterdata, 'newString');
+    }
+    else{
+    filterdata.columnCalName = this.advancedTabForm.get('columnCalName')?.value;
+    filterdata.columnFormula = this.advancedTabForm.get('columnFormula')?.value;
+    }
     let data = {
-      operation: newString,
+      operation: filterdata,
     };
     this.dialogRef.close(data);
   }
@@ -142,6 +185,7 @@ export class FilterComponent implements OnInit {
   }
   onClear() {
     this.formIntitialization();
+    this.advancedTabFormIntitialization();
   }
 
   formIntitialization() {
@@ -150,8 +194,28 @@ export class FilterComponent implements OnInit {
       table: new FormControl('', [Validators.required]),
       column: new FormControl('', [Validators.required]),
       operation: new FormControl('', [Validators.required]),
-      minmax: new FormControl('0.5', [Validators.required]),
+      condition: new FormControl('0.5', [Validators.required]),
     });
+  }
+
+  advancedTabFormIntitialization(){
+    this.advancedTabForm = new FormGroup({
+      columnCalName: new FormControl('', [Validators.required]),
+      columnFormula: new FormControl('', [Validators.required]),
+    });
+  }
+
+  isFormValid():boolean {
+    if(this.myForm.valid && this.simpleTabClicked){
+      console.log('val1',this.myForm);
+      return false;
+    }
+    if(this.advancedTabForm.valid && this.manualTabClicked){
+      console.log('val2',this.advancedTabForm);
+      return false;
+    }
+    console.log('val3');
+    return true;
   }
 
   editClicked() {
@@ -159,19 +223,27 @@ export class FilterComponent implements OnInit {
     this.onEditClicked = this.data.editClicked;
     this.addClicked = this.data.editClicked;
     this.filterRowdata = this.data.filterrow;
-    const prevdata = this.filterRowdata.split(',');
-    const firstElement = prevdata.shift();
-    console.log(firstElement,prevdata,'editclicked'); 
-    this.selectedOperator = firstElement
-    this.myForm = new FormGroup({
-      datasource: new FormControl(prevdata[0]),
-      table: new FormControl(prevdata[1]),
-      column: new FormControl(prevdata[2]),
-      operation: new FormControl(prevdata[3]),
-      minmax: new FormControl(prevdata[4]),
-    });
-    console.log(this.myForm,prevdata, 'formclicked');
-    this.onchangedatasource(prevdata[0]);
-    this.onchangetable(prevdata[1]);
+    this.selectedOperator = this.filterRowdata.expression;
+    if(this.filterRowdata.screen === "basic"){
+      this.simpleTabClicked = true;
+      this.manualTabClicked = false;
+      this.myForm = new FormGroup({
+        datasource: new FormControl(this.filterRowdata.datasource.domainName),
+        table: new FormControl(this.filterRowdata.table.entityName),
+        column: new FormControl(this.filterRowdata.column.attrName),
+        operation: new FormControl(this.filterRowdata.operator),
+        condition: new FormControl(this.filterRowdata.condition),
+      });
+      this.onchangedatasource(this.filterRowdata.datasource.domainName);
+      this.onchangetable(this.filterRowdata.table.entityName);
+      this.onChangeColumn(this.filterRowdata.column.attrName);
+    }else{
+      this.simpleTabClicked = false;
+      this.manualTabClicked = true;
+      this.advancedTabForm = new FormGroup({
+        columnCalName: new FormControl(this.filterRowdata.columnCalName),
+        columnFormula: new FormControl(this.filterRowdata.columnFormula)
+      });
+    }
   }
 }

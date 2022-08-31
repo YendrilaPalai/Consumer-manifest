@@ -5,16 +5,13 @@ import { MatAccordion } from '@angular/material/expansion';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { Join } from 'src/app/interface/join-interface';
 import { ApiService } from 'src/app/services/api.service';
-import { JoinDataService } from 'src/app/services/join-data.service';
 import { SplitwindowService } from 'src/app/services/splitwindow.service';
 import { FilterComponent } from '../filter/filter.component';
 import {
   EntityAttributeSave,
   EntitySave,
 } from 'src/app/interface/savemanifest-interface';
-import { SuccessPopupComponent } from 'src/app/common/success-popup/success-popup.component';
 
 @Component({
   selector: 'app-split-window',
@@ -43,20 +40,12 @@ export class SplitWindowComponent implements OnInit {
   disableFilterBtn: boolean = true;
   disableClearAllBtn: boolean = true;
   saveManifestList: any[] = [];
-  openSplitComponent: boolean = true;
-  openJoinComponent: boolean = false;
-  addedJoinoperation: Join[] = [];
-  sendtheeditedData: any;
-  sendthewholwjoinList: Join[] = [];
-  editClickedForJoin: boolean = false;
-  selecteddomainforjoin: any[] = [];
 
   constructor(
     private _splitwindowService: SplitwindowService,
     private _apiService: ApiService,
     private router: Router,
-    public dialog: MatDialog,
-    private _joinDataService: JoinDataService
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +57,7 @@ export class SplitWindowComponent implements OnInit {
       console.log('data', response.listofdatatype);
       this.listofdatatype = response.listofdatatype;
     });
+    this._splitwindowService.storeSelectedDomainName(this.selectedDomainName);
   }
 
   //on click addall of each entity.
@@ -151,6 +141,7 @@ export class SplitWindowComponent implements OnInit {
           }
         }
       });
+      console.log('removedlist', this.addedoperation, newDomainlist);
     }
     //this.showNoDatasourceContent = addedSelectorsCount === 0 ? true : false;
     this.selectedDomainName.forEach((eachdom: any) => {
@@ -171,7 +162,7 @@ export class SplitWindowComponent implements OnInit {
   onBackClick() {
     this.disableFilterBtn = true;
     this.disableClearAllBtn = true;
-    //this.router.navigate(['/home-page']);
+    this.router.navigate(['/home-page']);
   }
 
   //on click of clearall button on right pannel.
@@ -219,6 +210,7 @@ export class SplitWindowComponent implements OnInit {
         isAttrFlagDisabled += 1;
       }
     });
+    console.log('count', isAttrFlagDisabled);
     if (isAttrFlagDisabled === 0) {
       selectedEntityData.entityDisableFlag = false;
       selectedEntityData.displayEntityTargetPanel = false;
@@ -255,26 +247,12 @@ export class SplitWindowComponent implements OnInit {
   //on click of search button
   onSearch(searchkeys: any) {}
 
-  //success popup
-
-  opensuccesspopup() {
-    const dialogRef = this.dialog.open(SuccessPopupComponent, {
-      width: '30%',
-      height: '40%',
-      data: {
-        popupdata: 'created',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {this.onCreateManifest(result)});
-  }
-
   //on click of create manifest
-  onCreateManifest(res:any) {
-    console.log('resultfile',res);
+  onCreateManifest() {
     this.selectedDomainName.forEach((eachTarDomain: any) => {
       if (eachTarDomain.displayDomainTargetPanel) {
         let saveEntityList = {} as EntitySave;
-        eachTarDomain.entities.forEach((eachEntity: any) => {
+        eachTarDomain.entities.forEach((eachEntity: any) => {   
           if (eachEntity.displayEntityTargetPanel) {
             saveEntityList.entitySk = eachEntity.entitySk;
             saveEntityList.entityId = eachEntity.entityId;
@@ -283,7 +261,7 @@ export class SplitWindowComponent implements OnInit {
             saveEntityList.entitySrc = eachEntity.entitySrc;
             saveEntityList.sourceType = eachEntity.sourceType;
             let saveAttributesList: EntityAttributeSave[] =
-              [] as EntityAttributeSave[];
+            [] as EntityAttributeSave[];
             //saveAttributesList = [] as EntityAttributeSave[];
             let attrlist = {} as EntityAttributeSave;
             eachEntity.entityAttributes.forEach((eachAttr: any) => {
@@ -304,7 +282,7 @@ export class SplitWindowComponent implements OnInit {
                 //attrlist.tgtValSrcJson =  eachAttr.; need to ask
                 saveAttributesList.push(attrlist);
                 attrlist = {} as EntityAttributeSave;
-              }
+              }       
             });
             saveEntityList.entityAttributes = saveAttributesList;
             this.saveManifestList.push(saveEntityList);
@@ -313,11 +291,7 @@ export class SplitWindowComponent implements OnInit {
         });
       }
     });
-    console.log(
-      'save manifest',
-      this.selectedDomainName,
-      this.saveManifestList
-    );
+    console.log('save manifest',this.selectedDomainName,this.saveManifestList);
   }
 
   //opening the filter dialog
@@ -332,6 +306,7 @@ export class SplitWindowComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
+        console.log(result.operation);
         if (result && result.operation) {
           this.prevoperation = result.operation;
           this.addedoperation.push(result.operation);
@@ -342,11 +317,6 @@ export class SplitWindowComponent implements OnInit {
       this.onClickAdd();
     }
   }
-
-  onPublishClick(){
-    this.router.navigate(['/schedule']);
-  }
-
   onJoinClick() {
     let domdatatoloop = [];
     this.selecteddomainforjoin = [];
@@ -390,6 +360,7 @@ export class SplitWindowComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result.operation);
       if (result && result.operation) {
         this.prevoperation = result.operation;
         this.addedoperation.push(result.operation);
@@ -412,6 +383,7 @@ export class SplitWindowComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result.operation);
       if (result && result.operation) {
         if (indexx !== -1) {
           this.addedoperation[indexx] = result.operation;
@@ -430,6 +402,7 @@ export class SplitWindowComponent implements OnInit {
       this.dataFlag = false;
     }
   }
+
   onClickEditJoin(joinrow: any) {
     this.sendtheeditedData = joinrow;
     this.sendthewholwjoinList = this.addedJoinoperation;
@@ -448,4 +421,5 @@ export class SplitWindowComponent implements OnInit {
       this.dataFlag = false;
     }
   }
+
 }

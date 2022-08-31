@@ -25,6 +25,20 @@ import {MatButtonModule} from '@angular/material/button';
 import { FilterComponent } from './components/filter/filter.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { JoinPageComponent } from './components/join-page/join-page.component';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {PortalModule} from '@angular/cdk/portal';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {CdkStepperModule} from '@angular/cdk/stepper';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
+import { PublishPageComponent } from './components/publish-page/publish-page.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SuccessPopupComponent } from './common/success-popup/success-popup.component';
+import { SchedulePageComponent } from './components/schedule-page/schedule-page.component';
+import {MatTabsModule} from '@angular/material/tabs';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +50,11 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     FilterpipePipe,
     HomePageComponent,
     CardComponentComponent,
-    FilterComponent
+    FilterComponent,
+    JoinPageComponent,
+    PublishPageComponent,
+    SuccessPopupComponent,
+    SchedulePageComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +70,16 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatSelectModule,
     MatTableModule,
     MatDialogModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    ClipboardModule,
+    CdkStepperModule,
+    CdkTableModule,
+    CdkTreeModule,
+    DragDropModule,
+    PortalModule,
+    ScrollingModule,
+    MatSlideToggleModule,
+    MatTabsModule
   ],
   providers: [{ provide: Requestor, useValue: new FetchRequestor()},
     { provide: 'AuthorizationConfig', useValue: environment},AuthorizationService],

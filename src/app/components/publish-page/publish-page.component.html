@@ -1,0 +1,85 @@
+<app-header></app-header>
+<div class="m-2">
+  <button (click)="onBackClick()" class="btn btn-primary">Back</button>
+</div>
+<div class="qnA-hr-line"></div>
+<br />
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-8" style="color: #003b71">
+      <strong class="ml-3">Search a Manifest</strong>
+      <input
+        type="text"
+        class="form-control ml-2 search-style"
+        [(ngModel)]="searchManifest"
+        placeholder="Search manifest"
+      />
+    </div>
+    <div class="col-4" style="color: #003b71">
+      <strong>Show</strong>
+      <select
+        class="form-control dropdown-style"
+        [(ngModel)]="dropdown2"
+        (change)="changeAction($event)"
+      >
+        <!-- <option disabled selected value=""></option> -->
+        <option *ngFor="let sortItem of operations" [value]="sortItem.name">
+          {{ sortItem.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <br />
+  <div class="row container-fluid mt-3">
+    <div class="headercss">
+      <div class="container mt-5">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <!-- <th>Id</th> -->
+              <th>Name</th>
+              <th>Schedule</th>
+              <th>Publish details</th>
+              <th>Status</th>
+              <th>Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of Users | filterpipe: searchManifest">
+              <!-- <td>{{ user.id }}</td> -->
+              <td>{{ user.name }}</td>
+              <td>{{ user.schedule }}</td>
+              <td>{{ user.publish }}</td>
+              <td *ngIf="user.publish !== 'Not available'">
+                <mat-slide-toggle
+                  [checked]="user.status"
+                  (change)="updateActiveStatus(user)"
+                ></mat-slide-toggle>
+              </td>
+              <td *ngIf="user.publish !== 'Not available'">
+                {{ user.status }}
+              </td>
+              <td *ngIf="user.publish !== 'Not available'">
+                <img
+                  id="pastchatview"
+                  style="width: 20px; height: 20px"
+                  src="../../../assets/img/edit.svg"
+                />
+                &nbsp;
+                <img
+                  id="pastchatview"
+                  style="width: 20px; height: 20px"
+                  src="../../../assets/img/delete.svg"
+                />
+              </td>
+              <td *ngIf="user.publish === 'Not available'">
+                <button class="btn btn-primary">Publish</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
