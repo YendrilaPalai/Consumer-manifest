@@ -8,7 +8,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class SuccessPopupComponent implements OnInit {
 
-  typeOfFormat:any;
   fileName:any;
   constructor(
     public dialogRef: MatDialogRef<SuccessPopupComponent>,
@@ -21,16 +20,9 @@ export class SuccessPopupComponent implements OnInit {
   }
 
   saveFileDetails(){
-    console.log('filede',this.typeOfFormat,this.fileName)
     let data = {
-      fileType: this.typeOfFormat,
       fileName: this.fileName
     };
     this.dialogRef.close(data);
-  }
-
-  onChangeTypeOfFile(event:any){
-    this.typeOfFormat = event.target?.options[event.target.options.selectedIndex].text;
-    console.log('eventval',this.typeOfFormat);
   }
 }

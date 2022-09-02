@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 import {env} from 'src/environments/environment';
@@ -25,8 +25,17 @@ export class ApiService {
   }
 
   // getDomainData() {
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type':  'application/json',
+  //       'Authorization': 'Basic c3ZjU09JOndZQUo0Zzh4'
+  //     })
+  //   };
   //   const getDomainsUrl: string = `${env.API_URL+env.api+env.version+env.domains+env.getDomains}`;
-  //   return this.httpClient.get(getDomainsUrl);
+  //   return this.httpClient.get(getDomainsUrl, httpOptions)
+  //   .pipe(
+  //     catchError(catchError(this.errorHandler))
+  //   );
   // }
 
   public getDomainData(): Observable<any> {

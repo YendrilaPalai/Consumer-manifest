@@ -1,49 +1,25 @@
 export interface Publish {
   tabType: string;
-  manifestName:  string;
+  manifestName: string;
   schedulePlanner: string;
-  hourly: Hourly;
-  weekly: Weekly;
-  monthly: Montly;
-  yearly: Yearly;
+  scheduledData: ScheduledData;
 }
 
-export interface Hourly {
+export interface ScheduledData {
   selectedDay: string;
   selectedStartTime: TimeStamp;
   selectedEndTime: TimeStamp;
-}
-
-export interface Weekly {
-    selectedstartDate: Date;
-    selectedStartTime: TimeStamp;
-    repeatInaWeek: string;
-    selectedDay: string;
-    selectedEndDate: Date;
-    selectedEndTime: TimeStamp;
-}
-
-export interface Montly{
-    selectedstartDate: Date;
-    selectedStartTime: TimeStamp;
-    repeatInaMonth: string;
-    selectedDay: string;
-    selectedEndDate: Date;
-    selectedEndTime: TimeStamp;
-}
-
-export interface Yearly {
-    selectedstartDate: Date;
-    repeatInaWeek: string;
-    repeatOnaDay: string;
-    repeatInaMonth: string;
-    selectedTime: TimeStamp;
-    selectedEndDate: Date;
+  selectedstartDate: Date;
+  selectedEndDate: Date;
+  repeatEvery: string;
+  onDay: string;
+  repeatOnThe: string;
+  repeatInaMonth: string;
+  selectedTime: TimeStamp;
 }
 
 export interface TimeStamp {
-    hours: number;
-    minutes: number;
-    amorpm: string;
-};
-
+  hours: number;
+  minutes: number;
+  amorpm: string;
+}

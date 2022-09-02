@@ -41,6 +41,7 @@ export class SplitWindowComponent implements OnInit {
   prevoperation: any;
   dataFlag: boolean = false;
   disableFilterBtn: boolean = true;
+  disableJoinBtn: boolean = true;
   disableClearAllBtn: boolean = true;
   saveManifestList: any[] = [];
   openSplitComponent: boolean = true;
@@ -50,6 +51,7 @@ export class SplitWindowComponent implements OnInit {
   sendthewholwjoinList: Join[] = [];
   editClickedForJoin: boolean = false;
   selecteddomainforjoin: any[] = [];
+  disablePublishbtn: boolean = true;
 
   constructor(
     private _splitwindowService: SplitwindowService,
@@ -99,6 +101,15 @@ export class SplitWindowComponent implements OnInit {
     });
     selectedEntityData.entityDisableFlag =
       isAttrFlagDisabled < 1 ? true : false;
+    let count =0;
+    this.selectedDomainName.forEach((eachdom:any) => {
+      if(eachdom.displayDomainTargetPanel){
+        eachdom.entities.forEach((eachen:any) => {
+          if(eachen.displayEntityTargetPanel){count += 1;}
+        });  
+      }
+    });
+    this.disableJoinBtn = count >= 2 ? false : true;
   }
 
   //on change with multi select dropdown for datasources.
@@ -161,6 +172,7 @@ export class SplitWindowComponent implements OnInit {
     this.showNoDatasourceContent = domainsonrightpanel < 1 ? true : false;
     this.disableClearAllBtn = domainsonrightpanel < 1 ? true : false;
     this.disableFilterBtn = domainsonrightpanel < 1 ? true : false;
+    this.disableJoinBtn = domainsonrightpanel < 1 ? true : false;
   }
   // checks whether an object contains the list or not and return non exist list .
   containsObject(obj: any[], list: any[]) {
@@ -170,13 +182,15 @@ export class SplitWindowComponent implements OnInit {
   //on click of back button
   onBackClick() {
     this.disableFilterBtn = true;
+    this.disableJoinBtn = true;
     this.disableClearAllBtn = true;
-    //this.router.navigate(['/home-page']);
+    this.router.navigate(['/home-page']);
   }
 
   //on click of clearall button on right pannel.
   clearAllSelectors() {
     this.disableFilterBtn = true;
+    this.disableJoinBtn = true;
     this.disableClearAllBtn = true;
     this.selectedDomainName.forEach((clearEachSelected: any) => {
       //if (clearEachSelected.selected === true) {
@@ -265,12 +279,13 @@ export class SplitWindowComponent implements OnInit {
         popupdata: 'created',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {this.onCreateManifest(result)});
+    dialogRef.afterClosed().subscribe((result) => { console.log('hfg',result);if(result?.fileName){this.onCreateManifest(result)}});
   }
 
   //on click of create manifest
   onCreateManifest(res:any) {
     console.log('resultfile',res);
+    this.disablePublishbtn = false;
     this.selectedDomainName.forEach((eachTarDomain: any) => {
       if (eachTarDomain.displayDomainTargetPanel) {
         let saveEntityList = {} as EntitySave;

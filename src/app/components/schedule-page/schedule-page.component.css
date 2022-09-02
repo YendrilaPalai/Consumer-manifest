@@ -25,3 +25,33 @@
   background-color: #003b71;
   color: white;
 }
+
+.paddingcontainer {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.headercss {
+  background-color: #e7f0f9;
+  padding: 10px;
+}
+
+::ng-deep .custom-style{
+  background-color:brown;
+  color:white;
+}
+
+.background-container {
+  background-color: #827f7f0f;
+  margin-top: 44px;
+  padding: 24px;
+  /* margin-left: 12px; */
+  margin-right: 12px;
+}
+
+.mat-button-toggle-checked {
+  background-color: #094a8a;
+  color: white !important;
+}
+
+/** No CSS for this example */

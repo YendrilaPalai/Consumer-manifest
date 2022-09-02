@@ -13,8 +13,8 @@
   border-color: #003a70;
 }
 
-::ng-deep select{
-  -webkit-appearance: listbox !important
+::ng-deep select {
+  -webkit-appearance: listbox !important;
 }
 
 ::ng-deep .btn-secondary {
@@ -29,4 +29,20 @@
 
 ::ng-deep .textAlignment {
   text-align: center;
+}
+
+::ng-deep .form-control,
+.form-select {
+  border: 1.5px solid #6287a8;
+  border-radius: 0rem;
+}
+
+::ng-deep .mat-button-toggle {
+  background-color: white;
+  color: black;
+}
+
+::ng-deep .mat-button-toggle-checked {
+  background-color: #094a8a;
+  color: white;
 }

@@ -3,7 +3,7 @@
 </div>
 <div class="qnA-hr-line"></div>
 
-<div class="container-fluid">
+<div class="container-fluid paddingcontainer">
   <div class="row">
     <div class="col-9 mt-3 mt-3" style="color: #003b71">
       <strong>Publish</strong>
@@ -12,7 +12,7 @@
 
   <div class="row mt-3">
     <div class="container-fluid containerDesign">
-      <!-- basic and advance div here -->
+      <!-- basic and advance div starts here -->
       <div class="row">
         <div class="col-md-6">
           <div
@@ -33,13 +33,289 @@
           </div>
         </div>
       </div>
+      <!-- basic and advance div ends here -->
 
-      <mat-tab-group>
-        <mat-tab label="Hourly"> Hourly </mat-tab>
-        <mat-tab label="Weekly"> Weekly </mat-tab>
-        <mat-tab label="Monthly"> Monthly </mat-tab>
-        <mat-tab label="Yearly"> Yearly </mat-tab>
-      </mat-tab-group>
+      <!--manifest name div starts here -->
+      <div class="row my-4">
+        <div class="col-md-1">
+          <h6
+            style="background-color: #e7f0f9; padding: 7px; font-weight: 600px"
+          >
+            Manifest1
+          </h6>
+        </div>
+      </div>
+      <!--manifest name div ends here -->
+
+      <!--basic tab div starts here -->
+      <ng-container *ngIf="simpleTabClicked">
+        <div class="container-fluid mb-3">
+          <div class="row justify-content-center">
+            <!-- <div class="col-md-12"> -->
+
+            <mat-button-toggle-group
+              aria-label="Font Style"
+              style="border: none; margin-left: 68px"
+            >
+              <ng-container *ngFor="let tab of tabmap; let i = index">
+                <mat-button-toggle
+                  (click)="changeActiveTab(tab)"
+                  value="{{ tab.id }}"
+                  class="col-2 mx-2"
+                  style="border: 2px solid #094a8a; border-radius: 4px"
+                >
+                  <div>
+                    <label>{{ tab.tabname }}</label>
+                  </div>
+                </mat-button-toggle>
+                <div class="col-1"></div>
+              </ng-container>
+            </mat-button-toggle-group>
+            <!-- </div> -->
+          </div>
+        </div>
+
+        <!--FORM HTML STARTED-->
+        <div class="container-fluid mb-3">
+          <form [formGroup]="scheduleForm">
+            <div class="row">
+              <div
+                class="col-md-3"
+                *ngIf="
+                  hourlyTabSelected && !weeklyTabSelected && !yearlyTabSelected
+                "
+              >
+                <label style="color: #b4b4b4">Select a Day</label>
+
+                <select class="form-control mb-3" formControlName="selectedday">
+                  <option disabled selected value="">- Select a Day -</option>
+                  <option
+                    *ngFor="let data of selectADay"
+                    [ngValue]="data.dayname"
+                  >
+                    {{ data.dayname }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3" *ngIf="!hourlyTabSelected">
+                <label for="number" style="color: #b4b4b4">Start Date</label>
+                <input
+                  type="date"
+                  formControlName="startdate"
+                  placeholder=""
+                  class="form-control"
+                />
+              </div>
+              <div class="col-md-3" *ngIf="!yearlyTabSelected">
+                <label style="color: #b4b4b4">Start Time</label>
+
+                <div class="row col-12">
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numhourst"
+                      placeholder="HH"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numminutest"
+                      placeholder="MM"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-control" formControlName="amORpmst">
+                      <option value="am">AM</option>
+                      <option value="pm">PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="weeklyTabSelected">
+                <label style="color: #b4b4b4">Repeat Every</label>
+
+                <select class="form-control mb-3" formControlName="repeatevery">
+                  <option disabled selected value="">- Select -</option>
+                  <option *ngFor="let data of repeatEvery" [ngValue]="data">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+
+              <div
+                class="col-md-3"
+                *ngIf="yearlyTabSelected || monthlyTabSelected"
+              >
+                <label style="color: #b4b4b4">Repeat On The</label>
+
+                <select class="form-control mb-3" formControlName="repeatonthe">
+                  <option disabled selected value="">- Select -</option>
+                  <option *ngFor="let data of repeatOnTheList" [ngValue]="data">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3" *ngIf="!hourlyTabSelected">
+                <label style="color: #b4b4b4">On Day</label>
+
+                <select class="form-control mb-3" formControlName="onday">
+                  <option disabled selected value="">- Select a Day -</option>
+                  <option
+                    *ngFor="let data of selectADay"
+                    [ngValue]="data.dayname"
+                  >
+                    {{ data.dayname }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3" *ngIf="yearlyTabSelected">
+                <label style="color: #b4b4b4">On Month</label>
+
+                <select class="form-control mb-3" formControlName="onmonth">
+                  <option disabled selected value="">- Select a Month -</option>
+                  <option *ngFor="let data of onMonthList" [ngValue]="data">
+                    {{ data }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3" *ngIf="yearlyTabSelected">
+                <label style="color: #b4b4b4">At</label>
+
+                <div class="row col-12">
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numhouryr"
+                      placeholder="HH"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numminuteyr"
+                      placeholder="MM"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-control" formControlName="amORpmyr">
+                      <option value="am">AM</option>
+                      <option value="pm">PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="!hourlyTabSelected">
+                <label for="number" style="color: #b4b4b4">End Date</label>
+                <input
+                  type="date"
+                  formControlName="enddate"
+                  placeholder=""
+                  class="form-control"
+                />
+              </div>
+
+              <div
+                class="col-md-3"
+                *ngIf="
+                  hourlyTabSelected || weeklyTabSelected || monthlyTabSelected
+                "
+              >
+                <label style="color: #b4b4b4">End Time</label>
+
+                <div class="row col-12">
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numhouret"
+                      placeholder="HH"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      type="number"
+                      formControlName="numminuteet"
+                      placeholder="MM"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-control" formControlName="amORpmet">
+                      <option value="am">AM</option>
+                      <option value="pm">PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- clear and add/update button -->
+            <div class="row" style="margin-top: 32px; float: right">
+              <div class="col-12">
+                <button type="button" class="btn btn-primary">Cancel</button
+                >&nbsp;&nbsp;
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onClickOnPublish()"
+                >
+                  Publish
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+      <!--basic tab div ends here -->
+
+      <!--advanced tab div starts here -->
+      <ng-container *ngIf="manualTabClicked">
+        <div class="row">
+          <div class="container-fluid background-container">
+            <form [formGroup]="publishAdvancedTabForm">
+              <div class="form-group row">
+                <label>Custom Cron Expression</label>
+                <div class="col-md-10">
+                  <input
+                    class="form-control"
+                    placeholder="Enter your Cron Expression, example: 1 * * * SUN 1970"
+                    formControlName="cronExpression"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="isFormValid()"
+                    (click)="onClickValidate()"
+                  >
+                    Validate
+                  </button>
+                </div>
+              </div>
+
+              <!-- just a testing div starts here -->
+              <div class="row col-md-12 justify-content-center">
+                <!-- <div class="col-md-12 text-center"> -->
+                <div class="headercss textAlignment" style="color: #b4b4b4">
+                  {{ cronReadable }}
+                </div>
+              </div>
+              <!-- just a testing div ends here -->
+            </form>
+          </div>
+        </div>
+      </ng-container>
+      <!--advanced tab div ends here -->
+
+      <!--END-->
     </div>
   </div>
 </div>

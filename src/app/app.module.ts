@@ -38,6 +38,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { SuccessPopupComponent } from './common/success-popup/success-popup.component';
 import { SchedulePageComponent } from './components/schedule-page/schedule-page.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarComponent } from './common/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     JoinPageComponent,
     PublishPageComponent,
     SuccessPopupComponent,
-    SchedulePageComponent
+    SchedulePageComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     PortalModule,
     ScrollingModule,
     MatSlideToggleModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ],
   providers: [{ provide: Requestor, useValue: new FetchRequestor()},
     { provide: 'AuthorizationConfig', useValue: environment},AuthorizationService],
