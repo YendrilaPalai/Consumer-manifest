@@ -1,0 +1,80 @@
+[
+    {
+      "entitySk": 2,
+      "entityId": "diabetes_scal_adult_cohort",
+      "entityName": "diabetes_scal_adult_cohort",
+      "entityDesc": "diabetes_scal_adult_cohort Store",
+      "entitySrc": "entitySrc value",
+      "sourceType": "sourceType value",
+      "expression": "expression value",
+      "locationId": "locationId value",
+      "entityTypeId": "entityTypeId value",
+      "cronExpr": "*/15 * * * *",
+      "status": "Published",
+      "createTs": 1660521414983,
+      "consId": 1,
+      "domainId": 1,
+      "domainName": "rds_feature_store"
+      
+    },
+    {
+      "entitySk": 3,
+      "entityId": "LOC",
+      "entityName": "LOCCONS",
+      "entityDesc": "LOCCONS",
+      "entitySrc": "location_store",
+      "sourceType": "locationId",
+      "cronExpr": "0 0 1 * *",
+      "status": "Published",
+      "createTs": 1660786908931,
+      "consId": 1,
+      "domainId": 1,
+      "domainName": "rds_feature_store"
+      
+  },
+    {
+      "entitySk": 6,
+      "entityId": "CON",
+      "entityName": "CONDITION",
+      "entityDesc": "CONDITION",
+      "entitySrc": "DiabCoh_store",
+      "sourceType": "ConditionId",
+      "cronExpr": "0 11 * * *",
+      "status": "Published",
+      "createTs": 1660885261490,
+      "consId": 1,
+      "domainId": 1,
+      "domainName": "rds_feature_store"
+     
+    },
+    {
+      "entitySk": 7,
+      "entityId": "PRO",
+      "entityName": "PROCONS",
+      "entityDesc": "PROCONS",
+      "entitySrc": "procedure_store",
+      "cronExpr": "0 8 * * *",
+      "status": "Published",
+      "sourceType": "id",
+      "createTs": 1661045012454,
+      "consId": 1,
+      "domainId": 1,
+      "domainName": "rds_feature_store"
+     
+      },
+    {
+      "entitySk": 8,
+      "entityId": "PAT",
+      "entityName": "PATIENTINFO",
+      "entityDesc": "PATIENT INFO",
+      "entitySrc": "patient_store",
+      "cronExpr": "*/45 * * * *",
+      "status": "Published",
+      "sourceType": "id",
+      "createTs": 1661045609362,
+      "consId": 1,
+      "domainId": 1022,
+      "domainName": "PatientProcedureHbase"
+      
+      }
+  ]

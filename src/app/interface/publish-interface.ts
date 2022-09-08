@@ -6,9 +6,9 @@ export interface Publish {
 }
 
 export interface ScheduledData {
-  selectedDay: string;
+  everyHour: string;
   selectedStartTime: TimeStamp;
-  selectedEndTime: TimeStamp;
+  //selectedEndTime: TimeStamp;
   selectedstartDate: Date;
   selectedEndDate: Date;
   repeatEvery: string;

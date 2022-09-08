@@ -28,11 +28,12 @@ export class ApiService {
   //   const httpOptions = {
   //     headers: new HttpHeaders({
   //       'Content-Type':  'application/json',
-  //       'Authorization': 'Basic c3ZjU09JOndZQUo0Zzh4'
+  //       'Authorization': 'Basic c3ZjU09JOndZQUo0Zzh4',
+  //       'Cookie': "JSESSIONID=4FA29587D7CB5E1156AAB7D90B7CDEE9; srv_id=65370fd6ab17ad44638c5d0d6f70f3ea"
   //     })
   //   };
   //   const getDomainsUrl: string = `${env.API_URL+env.api+env.version+env.domains+env.getDomains}`;
-  //   return this.httpClient.get(getDomainsUrl, httpOptions)
+  //   return this.httpClient.get('http://localhost:1111/vicsvc/activeSkills')
   //   .pipe(
   //     catchError(catchError(this.errorHandler))
   //   );

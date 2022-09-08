@@ -46,25 +46,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of Users | filterpipe: searchManifest">
+            <tr *ngFor="let user of newPublish | filterpipe: searchManifest">
               <!-- <td>{{ user.id }}</td> -->
-              <td>{{ user.name }}</td>
-              <td>{{ user.schedule }}</td>
-              <td>{{ user.publish }}</td>
+              <!-- <td>{{ user.name }}</td>
+              <td>{{ user.schedule }}</td> -->
+              <!-- <td>{{ user.publish }}</td> -->
+              <!-- <td >{{publishListVal}}</td> -->
+              <td>{{user.entityName}}</td>
+              <td>{{user.cronExpr}}</td>
+              <td>{{user.publish}}</td>
+              
               <td *ngIf="user.publish !== 'Not available'">
                 <mat-slide-toggle
-                  [checked]="user.status"
+                  [checked]="user.flag"
                   (change)="updateActiveStatus(user)"
                 ></mat-slide-toggle>
               </td>
-              <td *ngIf="user.publish !== 'Not available'">
+              <!-- <td *ngIf="user.publish !== 'Not available'">
                 {{ user.status }}
-              </td>
+              </td> -->
+              <td>{{user.flag}}</td>
               <td *ngIf="user.publish !== 'Not available'">
                 <img
                   id="pastchatview"
                   style="width: 20px; height: 20px"
                   src="../../../assets/img/edit.svg"
+                  (click)="editPublish(user)"
                 />
                 &nbsp;
                 <img

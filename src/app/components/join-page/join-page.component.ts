@@ -48,6 +48,10 @@ export class JoinPageComponent implements OnInit {
   @Input() editrowdata = {};
   @Input() updatedList: Join[] = [];
   @Input() editFlag: boolean;
+  fullouterFlag: boolean = true;
+  leftouterFlag: boolean = false;
+  rightouterFlag: boolean = false;
+  innerFlag: boolean = false;
 
   constructor(
     private router: Router,
@@ -162,7 +166,30 @@ export class JoinPageComponent implements OnInit {
     this.initializeAllField();
   }
 
-  changeActiveTab(data: any) {}
+  changeActiveTab(data: any) {
+    console.log(data, 'data');
+    if (data == 'Full Outer') {
+      this.fullouterFlag = true;
+      this.leftouterFlag = false;
+      this.rightouterFlag = false;
+      this.innerFlag = false;
+    } else if (data == 'Right Outer') {
+      this.fullouterFlag = false;
+      this.leftouterFlag = false;
+      this.rightouterFlag = true;
+      this.innerFlag = false;
+    } else if (data == 'Left Outer') {
+      this.fullouterFlag = false;
+      this.leftouterFlag = true;
+      this.rightouterFlag = false;
+      this.innerFlag = false;
+    } else if (data == 'Inner') {
+      this.fullouterFlag = false;
+      this.leftouterFlag = false;
+      this.rightouterFlag = false;
+      this.innerFlag = true;
+    }
+  }
 
   onClickAddButton() {
     this.button = 'Add';
@@ -228,6 +255,8 @@ export class JoinPageComponent implements OnInit {
   }
 
   onClickEditJoin(row: any) {
+    this.changeActiveTab(row.joinCondition);
+    console.log(row, 'Row');
     this.editClicked = true;
     this.indexx = this.prevoperation.indexOf(row);
     this.button = 'Update';
@@ -270,6 +299,10 @@ export class JoinPageComponent implements OnInit {
     this.prevoperation = filtered;
     if (this.prevoperation.length === 0) {
       this.dataFlag = false;
+      this.fullouterFlag = true;
+      this.leftouterFlag = false;
+      this.rightouterFlag = false;
+      this.innerFlag = false;
     }
   }
   initializeAllField() {
@@ -282,5 +315,9 @@ export class JoinPageComponent implements OnInit {
     this.leftTableNameShowHtml = 'Left Table';
     this.domainnameforLeft = 'Left Datasource';
     this.domainnameforRight = 'Right Datasource';
+    this.fullouterFlag = true;
+    this.leftouterFlag = false;
+    this.rightouterFlag = false;
+    this.innerFlag = false;
   }
 }

@@ -63,6 +63,7 @@ export class SplitWindowComponent implements OnInit {
 
   ngOnInit(): void {
     this._apiService.getDomainData().subscribe((response: any) => {
+      console.log('res', response);
       this.domData = response;
     });
 
@@ -316,7 +317,7 @@ export class SplitWindowComponent implements OnInit {
                 attrlist.colGrpLvl = eachAttr.colGrpLvl;
                 attrlist.createTs = eachAttr.createTs;
                 attrlist.lastUpdtTs = eachAttr.lastUpdtTs;
-                //attrlist.tgtValSrcJson =  eachAttr.; need to ask
+                attrlist.tgtValSrcJson =  eachAttr.attrDesc;
                 saveAttributesList.push(attrlist);
                 attrlist = {} as EntityAttributeSave;
               }

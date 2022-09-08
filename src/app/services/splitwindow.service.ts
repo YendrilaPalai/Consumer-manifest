@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SplitwindowService {
   selectedDomainNameStore: BehaviorSubject<any> = new BehaviorSubject<any>([]);
   storeEntityAttributeSearch: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+  publishManifestData:BehaviorSubject<any> = new BehaviorSubject<any>([]);
   constructor() { }
 
   storeSelectedDomainName(passedData:any) {
@@ -26,4 +27,13 @@ export class SplitwindowService {
   retrieveStoreSearchResultBeforeFilter(){
     return this.storeEntityAttributeSearch;
   }
+
+  storeSelectedPublishData(passedData:any){
+    console.log('pt',passedData);
+    this.publishManifestData.next(passedData);
+   }
+  
+   retrieveStoreSelectedPublishData(){
+  return this.publishManifestData;
+   }
 }

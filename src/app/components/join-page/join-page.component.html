@@ -182,6 +182,10 @@
                             style="margin-left: 5%; margin-bottom: 2%"
                           >
                             <img
+                              style="width: 70px" *ngIf="fullouterFlag"
+                              src="../../../assets/img/Full outer after clicked.svg"
+                            />
+                            <img *ngIf="!fullouterFlag"
                               style="width: 70px"
                               src="../../../assets/img/FullOuter.svg"
                             />
@@ -195,9 +199,13 @@
                             style="margin-bottom: 2%"
                           >
                             <img
-                              style="width: 70px"
+                              style="width: 70px" *ngIf="!innerFlag"
                               src="../../../assets/img/Inner.svg"
                             />
+                            <img
+                            style="width: 70px" *ngIf="innerFlag"
+                            src="../../../assets/img/Inner after clicked.svg"
+                          />
                             <div><label>Inner</label></div>
                           </mat-button-toggle>
                           <div class="col-1"></div>
@@ -207,8 +215,12 @@
                             class="col-2"
                             style="margin-bottom: 2%"
                             ><img
-                              style="width: 70px"
+                              style="width: 70px" *ngIf="!leftouterFlag"
                               src="../../../assets/img/Left Outer.svg"
+                            />
+                            <img
+                              style="width: 70px" *ngIf="leftouterFlag"
+                              src="../../../assets/img/Left outer after clicked.svg"
                             />
                             <div><label>Left Outer</label></div>
                           </mat-button-toggle>
@@ -220,9 +232,13 @@
                             style="margin-bottom: 2%"
                           >
                             <img
-                              style="width: 70px"
-                              src="../../../assets/img/Right Outer.svg"
+                              style="width: 70px" *ngIf="rightouterFlag"
+                              src="../../../assets/img/Right outer after clicked.svg"
                             />
+                            <img
+                            style="width: 70px"  *ngIf="!rightouterFlag"
+                            src="../../../assets/img/Right Outer.svg"
+                          />
                             <div>
                               <label>Right Outer</label>
                             </div>
