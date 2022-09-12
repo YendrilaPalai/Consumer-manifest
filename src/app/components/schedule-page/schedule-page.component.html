@@ -61,7 +61,7 @@
                     Please set the Active Period of the job
                   </div>
                   <div class="col-md-3">
-                    <label for="number" class="labelcss">Start Date*</label>
+                    <label for="number" class="labelcss">Start Date<span class="asterisk">*</span></label>
                     <input
                       type="date"
                       formControlName="startdate"
@@ -73,11 +73,12 @@
                   </div>
 
                   <div class="col-md-3">
-                    <label for="number" class="labelcss">End Date*</label>
+                    <label for="number" class="labelcss">End Date<span class="asterisk">*</span></label>
                     <input
                       type="date"
                       formControlName="enddate"
                       placeholder=""
+                      (change)="onEndDateChange($event)"
                       min="{{endDateMin}}"
                       class="form-control"
                     />
@@ -98,15 +99,19 @@
                 aria-label="Font Style"
                 style="border: none"
                 (change)="onToggleGroupChange($event)"
+                [disabled]="tabgroupdisable"
+                
               >
+
                 <ng-container>
                   <mat-button-toggle
                     *ngFor="let tab of tabmap; let i = index"
                     value="{{ tab.id }}"
                     class="col-md-3"
                     style="border: 2px solid #094a8a; border-radius: 0px"
-                    [checked]="tab.id == 1 ? true : false"
+                    [checked]="tab.id == tabIndex ? true : false" 
                   >
+                  <!-- [checked]="tab.id == 1 ? true : false" -->
                     <div>
                       <label>{{ tab.tabname }}</label>
                     </div>
@@ -118,7 +123,7 @@
             </div>
 
             <!--FORM HTML STARTED-->
-            <div class="my-3">
+            <div class="my-3" *ngIf="showTheForm">
               <div class="row">
                 <div
                   class="col-md-3"
@@ -128,7 +133,7 @@
                     !yearlyTabSelected
                   "
                 >
-                <label style="color: #b4b4b4">Every(Hour)*</label>
+                <label style="color: #b4b4b4">Every(Hour)<span class="asterisk">*</span></label>
 
                 <select class="form-control mb-3" formControlName="everyHour">
                   <option disabled selected value="">- Select a Hour -</option>
@@ -145,7 +150,7 @@
                   class="col-md-3"
                   *ngIf="yearlyTabSelected || monthlyTabSelected"
                 >
-                  <label style="color: #b4b4b4">Repeat On The*</label>
+                  <label style="color: #b4b4b4">Repeat On The<span class="asterisk">*</span></label>
 
                   <select
                     class="form-control mb-3"
@@ -162,7 +167,7 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="!hourlyTabSelected">
-                  <label style="color: #b4b4b4">On Day*</label>
+                  <label style="color: #b4b4b4">On Day<span class="asterisk">*</span></label>
 
                   <select class="form-control mb-3" formControlName="onday">
                     <option disabled selected value="">- Select a Day -</option>
@@ -176,7 +181,7 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="yearlyTabSelected">
-                  <label style="color: #b4b4b4">On Month*</label>
+                  <label style="color: #b4b4b4">On Month<span class="asterisk">*</span></label>
 
                   <select class="form-control mb-3" formControlName="onmonth">
                     <option disabled selected value="">
@@ -189,7 +194,7 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="yearlyTabSelected">
-                  <label style="color: #b4b4b4">At*</label>
+                  <label style="color: #b4b4b4">At<span class="asterisk">*</span></label>
 
                   <div class="row col-12">
                     <div class="col-md-4">
@@ -219,7 +224,7 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="!yearlyTabSelected">
-                  <label style="color: #b4b4b4">Start Time*</label>
+                  <label style="color: #b4b4b4">Start Time<span class="asterisk">*</span></label>
 
                   <div class="row col-12">
                     <div class="col-md-4">
@@ -252,7 +257,7 @@
               <!-- clear and add/update button -->
               <div class="row" style="margin-top: 32px; float: right">
                 <div class="col-12">
-                  <button type="button" class="btn btn-primary">Cancel</button
+                  <button type="button" class="btn btn-primary" (click)="onClear()">Clear</button
                   >&nbsp;&nbsp;
                   <button
                     type="button"
@@ -260,7 +265,7 @@
                     (click)="onClickOnPublish()"
                     [disabled]="!scheduleForm.valid"
                   >
-                    Publish
+                    Schedule
                   </button>
                 </div>
               </div>
@@ -296,7 +301,7 @@
               </div>
 
               <!-- just a testing div starts here -->
-              <div class="row col-md-12 justify-content-center">
+              <div class="row col-md-11">
                 <!-- <div class="col-md-12 text-center"> -->
                 <div class="headercss textAlignment" style="color: #b4b4b4">
                   {{ cronReadable }}
@@ -308,8 +313,12 @@
         </div>
       </ng-container>
       <!--advanced tab div ends here -->
-      <h4>{{ cronPieces }}</h4>
+      <!-- <h4>{{ cronPieces }}</h4> -->
       <!--END-->
     </div>
   </div>
+</div>
+
+<div>
+  <app-publish-page [schedulepageFlag]="true"></app-publish-page>
 </div>

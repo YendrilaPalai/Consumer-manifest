@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SplitwindowService } from 'src/app/services/splitwindow.service';
 import cronstrue from 'cronstrue';
@@ -19,6 +19,9 @@ interface newUSERS{
   cronExpr:string;
   publish:string;
   flag:boolean;
+  startDate:string;
+
+  endDate:string;
 }
 
 @Component({
@@ -36,6 +39,9 @@ export class PublishPageComponent implements OnInit {
   tabDat: any = [];
   searchManifest: string = '';
   selectedpublishData:any;
+  startDate:any;
+
+  endDate:any;
 
  // Users: USERS[] = publishData;
 
@@ -43,9 +49,16 @@ export class PublishPageComponent implements OnInit {
   cronListVal:any=[];
   publishListVal:any;
   entityName:any;
+
+  @Input() schedulepageFlag: any;
+  @Input() crondatafromschedule: any;
+  @Input() advancedTabData: boolean;
+  
   constructor(private router: Router,private _splitwindowService: SplitwindowService) {}
 
   ngOnInit(): void {
+    console.log(this.schedulepageFlag+"___"+this.crondatafromschedule)
+
     console.log(publishData);
    console.log(publishNewData);
    this.newPublish=[];
@@ -53,13 +66,50 @@ export class PublishPageComponent implements OnInit {
     this.cronListVal=x.cronExpr;
     this.publishListVal = cronstrue.toString(this.cronListVal);
     this.entityName=x.entityName;
+    this.startDate=x.startDate;
+  this.endDate=x.endDate;
  //this.publishListVal.push(readable);
- this.newPublish.push({entityName:this.entityName,cronExpr:this.cronListVal,publish:this.publishListVal,flag:true});
+ this.newPublish.push({entityName:this.entityName,cronExpr:this.cronListVal,publish:this.publishListVal,flag:true,startDate:this.startDate,endDate:this.endDate});
  console.log(this.newPublish);
    //let myArray = this.publishListVal.split(',');
     // this.publishListVal = readable;
    // console.log(this.publishListVal);
   })
+
+
+
+  //Data comming from schedule page
+  if (this.schedulepageFlag == true) {
+    this._splitwindowService
+      .retrieveStoreSelectedCronData()
+      .subscribe((res: any) => {
+        console.log('schedule comp', res);
+        if (res.advancedTabClicked == false) {
+          this.newPublish.unshift({
+            entityName: 'MANIFEST',
+            cronExpr: res.crondataschedule,
+            publish: cronstrue.toString(res.crondataschedule),
+            flag: true,
+            startDate:res.crondataschedule,
+            endDate:res.crondataschedule
+            
+          });
+        } else {
+          this.newPublish.unshift({
+            entityName: 'MANIFEST',
+            cronExpr: 'Custom',
+            publish: cronstrue.toString(res.crondataschedule),
+            flag: true,
+            startDate:res.crondataschedule,
+            endDate:res.crondataschedule
+          });
+        }
+      });
+
+    console.log(this.newPublish);
+  }
+
+
   }
 
   onBackClick() {

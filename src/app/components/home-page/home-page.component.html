@@ -65,26 +65,32 @@
         <form [formGroup]="myForm">
           <div class="row mx-4">
             <div class="col-4">
+              <label>Search a Manifest</label>
               <input
                 type="text"
                 #searchInput
                 formControlName="search"
-                placeholder="Search a manifest"
+                placeholder="Search"
                 class="form-control"
               />
             </div>
             <div class="col-4">
+              <label>Sort By</label>
                 <select
                   class="form-select mb-3"
                   (ngModelChange)="changeSort($event)"
                   formControlName="sort"
                 >
+                <option disabled selected value="">
+                  - Sort By -
+                </option>
                   <option *ngFor="let sortItem of sortLists" [ngValue]="sortItem">
                     {{ sortItem }}
                   </option>
                 </select>
               </div>
             <div class="col-4">
+              <label>Filter</label>
               <input
                 type="text"
                 #filterInput

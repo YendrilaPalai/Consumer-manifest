@@ -4,9 +4,9 @@
     <button (click)="onBackClick()" class="btn btn-primary">Back</button>
   </div>
   <div class="qnA-hr-line"></div>
-  <div class="container-fluid">
-    <div class="row" style="padding-top: 2%">
-      <div class="col-10">
+  <div class="container-fluid" style="padding-top: 2%">
+    <div class="row col-md-12">
+      <div class="col-md-10">
         <mat-form-field
           appearance="fill"
           class="mat-fieldcss"
@@ -29,7 +29,7 @@
         </mat-form-field>
       </div>
       <!-- save and publish div starts here -->
-      <div *ngIf="showRightPanel" class="col-2">
+      <div *ngIf="showRightPanel" class="col-md-2">
         <button
           type="button"
           [disabled]="disableFilterBtn"
@@ -39,7 +39,7 @@
           Save</button
         >&nbsp;&nbsp;
 
-        <button type="button" (click)="onPublishClick()" [disabled]="disablePublishbtn"  class="btn btn-primary">Publish</button>
+        <button type="button" (click)="onPublishClick()" [disabled]="disablePublishbtn"  class="btn btn-primary">Schedule</button>
       </div>
       <!-- save and publish div ends here -->
     </div>
@@ -106,7 +106,7 @@
                         class="btn btn-success"
                         [disabled]="entity.entityDisableFlag"
                       >
-                        Added<mat-icon>done</mat-icon>
+                        Added<mat-icon [ngStyle]="{'color':'green'}">done</mat-icon>
                       </button>
                     </mat-expansion-panel-header>
                     <table
@@ -159,7 +159,7 @@
                             class="btn btn-success"
                             [disabled]="element.entityAttributeDisableFlag"
                           >
-                            Added<mat-icon>done</mat-icon>
+                            Added<mat-icon [ngStyle]="{'color':'green'}">done</mat-icon>
                           </button>
                         </td>
                       </ng-container>

@@ -21,13 +21,16 @@ export class SchedulePageComponent implements OnInit {
   simpleTabClicked: boolean = true;
   manualTabClicked: boolean = false;
   value: any = 1;
+  selectedStDate:string;
 
+  selectedEnDate:string;
   hourlyTabSelected: boolean = true;
   monthlyTabSelected: boolean = false;
   weeklyTabSelected: boolean = false;
   yearlyTabSelected: boolean = false;
   cronPieces: any;
   date: any;
+  startDateMin:any;
   endDateMin: any;
 
   monthsOfYear = [
@@ -105,46 +108,98 @@ export class SchedulePageComponent implements OnInit {
   selectedTab: any;
   cronReadable: string = 'Cron expressions as human readable text';
   tabIndex: any = 1;
-  selectedManifest:any;
-  constructor(private router: Router, private snackBar: MatSnackBar,private _splitwindowService: SplitwindowService) {}
+  selectedManifest: any;
+  startDateFilled: boolean = false;
+  endDateFilled: boolean = false;
+  showTheForm: boolean = false;
+  tabgroupdisable: boolean = true;
+  startDateValue: any;
+  endDateValue: any;
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private _splitwindowService: SplitwindowService
+  ) {}
 
   ngOnInit(): void {
     this.formIntitialization();
-    
+
     this._splitwindowService
-    .retrieveStoreSelectedPublishData()
-    .subscribe((res: any) => {
-//console.log('schedule comp',res);
-this.selectedManifest=res.entityName;
+      .retrieveStoreSelectedPublishData()
+      .subscribe((res: any) => {
+        this.selectedManifest = res.entityName;
+        this.selectedStDate=res.startDate;
+this.selectedEnDate=res.endDate;
+
+// this.scheduleForm.get('startdate')?.setValue(this.selectedStDate);
+//     this.scheduleForm.get('enddate')?.setValue(this.selectedEnDate);
+
+let cornexpression =
+      res.cronExpr;
+    let isValidExp = cron(cornexpression , {
+      preset: 'default',
+      override: {
+        useYears: false,
+        useBlankDay: true,
+        useAliases: true,
+        useNthWeekdayOfMonth: true,
+        useLastDayOfMonth: true, // optional, default to false
+        useLastDayOfWeek: true, // optional, default to fals
+        useNearestWeekday: true, // optional, default to false
+      },
     });
+    const validValue = isValidExp.getValue();
+    console.log(validValue);
+    var newString = new String(validValue.daysOfWeek);
+    if(validValue.daysOfWeek==="?"){
+      this.tabIndex=1;
+  this.onToggleGroupChange(this.tabIndex);
+  this.convertCronToTimeDaily(validValue);
+}
+
+else if(!newString.includes("#")){
+  this.tabIndex=2;
+  this.onToggleGroupChange(this.tabIndex);
+  this.convertCronToTimeWeekly(validValue);
+}
+
+else if(newString.indexOf("#") && validValue.months==="*"){
+  this.tabIndex=3;
+  this.onToggleGroupChange(this.tabIndex);
+this.convertCronToTimeMonthly(validValue);
+
+}
+
+else if(validValue.months!=="*"){
+  this.tabIndex=4;
+  this.onToggleGroupChange(this.tabIndex);
+ 
+}
+      });
 
     this.date = new Date();
-    if (this.tabIndex == 1) {
-      this.onToggleGroupChange(this.tabIndex);
-      
-    this.scheduleForm.controls['everyHour'].setValidators(
-      Validators.required
-    );
-    this.scheduleForm.controls['numminutest'].setValidators(
-      Validators.required
-    );
-    this.scheduleForm.controls['amORpmst'].setValidators(Validators.required);
-    this.scheduleForm.controls['numhourst'].setValidators(
-      Validators.required
-    );
-    }
   }
 
   clickOnSimple() {
     this.simpleTabClicked = true;
     this.manualTabClicked = false;
     this.formIntitialization();
+    this.scheduleForm.get('startdate')?.setValue('');
+    this.scheduleForm.get('enddate')?.setValue('');
+    this.startDateFilled = false;
+    this.endDateFilled = false;
   }
 
   clickOnManual() {
     this.manualTabClicked = true;
     this.simpleTabClicked = false;
     this.advancedTabFormIntitialization();
+    this.tabgroupdisable=true;
+    this.showTheForm=false;
+    this.scheduleForm.get('startdate')?.setValue('');
+    this.scheduleForm.get('enddate')?.setValue('');
+    this.startDateFilled = false;
+    this.endDateFilled = false;
   }
 
   onClickOnPublish() {
@@ -192,10 +247,8 @@ this.selectedManifest=res.entityName;
     } else if (this.tabIndex == 4) {
       this.convertTimeToCronYearly(scheduledData);
     } else if (this.tabIndex == 2) {
-      console.log('2');
       this.convertTimeToCronWeekly(scheduledData);
     } else if (this.tabIndex == 1) {
-      console.log('1');
       this.convertTimeToCronDaily(scheduledData);
     }
   }
@@ -218,16 +271,12 @@ this.selectedManifest=res.entityName;
       numminuteyr: new FormControl(),
       amORpmyr: new FormControl(''),
       enddate: new FormControl(),
-      numhouret: new FormControl(),
-      numminuteet: new FormControl(),
-      amORpmet: new FormControl(),
     });
     this.hourlyTabSelected = true;
     this.weeklyTabSelected = false;
     this.monthlyTabSelected = false;
     this.yearlyTabSelected = false;
     this.cronReadable = 'Cron expressions as human readable text';
-
   }
 
   isFormValid(): boolean {
@@ -262,7 +311,6 @@ this.selectedManifest=res.entityName;
         useNearestWeekday: true, // optional, default to false
       },
     });
-    console.log('newhf', isValidExp, cornexpression);
     if (isValidExp.isValid()) {
       let readable = cronstrue.toString(cornexpression);
       this.cronReadable = readable;
@@ -275,6 +323,11 @@ this.selectedManifest=res.entityName;
       this.errorMessageInSnackbar(errorValue[0]);
       //this.toastrService.error(errorValue[0], 'Error!');
     }
+
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: cornexpression,
+      advancedTabClicked: this.manualTabClicked,
+    });
   }
 
   errorMessageInSnackbar(errormsg: any) {
@@ -292,7 +345,6 @@ this.selectedManifest=res.entityName;
     // 0 10 ? * 2#3  At 10 a.m. on the third Monday of every month:
 
     //<seconds> <minutes> <hours> <day-of-month> <month> <day-of-week> <year>
-
     this.cronPieces = ['00', '*', '*', '?', '*', '?'];
 
     //MINUTE
@@ -350,9 +402,13 @@ this.selectedManifest=res.entityName;
       }
       this.cronPieces[6] = yeartoset;
     }
-    this.cronPieces.splice(0,1)
+    this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
     console.log(this.cronPieces, 'cron');
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: this.cronPieces,
+      advancedTabClicked: this.manualTabClicked,
+    });
 
     //return this.cronPieces.join(' ');
   }
@@ -429,9 +485,13 @@ this.selectedManifest=res.entityName;
       this.cronPieces[6] = yeartoset;
       this.cronPieces[4] = monthtoset;
     }
-    this.cronPieces.splice(0,1)
+    this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
     console.log(this.cronPieces, 'cron');
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: this.cronPieces,
+      advancedTabClicked: this.manualTabClicked,
+    });
 
     //return this.cronPieces.join(' ');
   }
@@ -509,9 +569,13 @@ this.selectedManifest=res.entityName;
     //   this.cronPieces[6] = yeartoset;
     //   this.cronPieces[4] = monthtoset;
     // }
-    this.cronPieces.splice(0,1)
+    this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
     console.log(this.cronPieces, 'cron');
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: this.cronPieces,
+      advancedTabClicked: this.manualTabClicked,
+    });
 
     //return this.cronPieces.join(' ');
   }
@@ -525,7 +589,7 @@ this.selectedManifest=res.entityName;
     this.cronPieces = ['00', '*', '*', '?', '*', '?'];
 
     //MINUTE
-    this.cronPieces[1] = 0;
+    this.cronPieces[1] = job.selectedStartTime.minutes;
 
     //HOUR
     let hourstart = '';
@@ -587,30 +651,179 @@ this.selectedManifest=res.entityName;
     //   this.cronPieces[6] = yeartoset;
     //   this.cronPieces[4] = monthtoset;
     // }
-    this.cronPieces.splice(0,1)
+    this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
     console.log(this.cronPieces, 'cron');
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: this.cronPieces,
+      advancedTabClicked: this.manualTabClicked,
+    });
 
     //return this.cronPieces.join(' ');
   }
 
+convertCronToTimeDaily(job:any){
+    console.log("from cron to time",job);
+    let jobstrttime=job.hours.split('/');
+    let everyhour=Number(jobstrttime[1]);
+    let strttimehr=Number(jobstrttime[0])
+    let strttimemin=Number(job.minutes);
+    if(strttimehr>12){
+    let final = strttimehr-12;
+    this.scheduleForm.get('numhourst')?.setValue(final);
+    this.scheduleForm.get('amORpmst')?.setValue("PM");
+    }
+    else{
+      this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+    this.scheduleForm.get('amORpmst')?.setValue("AM");
+    }
+  
+ //let eh1= this.everyHour.find((eh:number)=>eh===everyhour);
+  //   let evryhr1=[];
+  // evryhr1.push(everyhour);
+    this.scheduleForm.get('everyHour')?.setValue(everyhour);
+    this.scheduleForm.get('numminutest')?.setValue(strttimemin);
+    
+    
+    
+    
+  }
+
+  convertCronToTimeWeekly(job:any){
+   // let onDay=Number(job.daysOfWeek);
+    this.daysOfWeek.forEach((week: any) => {
+      if (Number(job.daysOfWeek) === week.id) {
+        let onDay = week.name;
+        this.scheduleForm.get('onday')?.setValue(onDay);
+      }
+    });
+    let strttimemin=job.minutes;
+    if(job.hours>12){
+      let strttimehr=job.hours-12;
+      this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+      this.scheduleForm.get('amORpmst')?.setValue("PM");
+    }
+    else{
+let strttimehr=job.hours;
+this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+this.scheduleForm.get('amORpmst')?.setValue("AM");
+    }
+   
+    this.scheduleForm.get('numminutest')?.setValue(strttimemin);
+
+  }
+
+convertCronToTimeMonthly(job:any){
+
+let dayOfweek= job.daysOfWeek.split('#');
+let onDay=Number(dayOfweek[0]);
+let repeatOnThe=Number(dayOfweek[1]);
+let strttimehr=Number(job.hours);
+let strttimemin=Number(job.minutes);
+
+this.repeatOnWeek.forEach((data: any) => {
+  if (repeatOnThe === data.id) {
+   let repeatData = data.name;
+   this.scheduleForm.get('repeatonthe')?.setValue(repeatData);
+  }
+});
+
+this.daysOfWeek.forEach((week: any) => {
+  if (onDay === week.id) {
+    let onDayName = week.name;
+    this.scheduleForm.get('onday')?.setValue(onDayName);
+  }
+});
+
+if(strttimehr>12){
+ let finalstrtimehr= strttimehr-12;
+  this.scheduleForm.get('numhourst')?.setValue(finalstrtimehr);
+      this.scheduleForm.get('amORpmst')?.setValue("PM");
+}
+else{
+  this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+      this.scheduleForm.get('amORpmst')?.setValue("AM");
+}
+
+this.scheduleForm.get('numminutest')?.setValue(strttimemin);
+
+  }
   onStartDateChange(event: any) {
-    console.log('e', event.target.value);
-    this.endDateMin = event.target.value;
     this.scheduleForm.get('enddate')?.setValue('');
+    this.startDateValue = this.scheduleForm.get('startdate')?.value;
+    this.startDateMin = this.date;
+    this.endDateMin = event.target.value;
+    
+    if (
+      this.scheduleForm.get('startdate')?.value !== null ||
+      this.scheduleForm.get('startdate')?.value !== ''
+    ) {
+      this.startDateFilled = true;
+    }
+
+    if (this.startDateFilled && this.endDateFilled) {
+      this.tabgroupdisable = false;
+    } else {
+      this.tabgroupdisable = true;
+    }
+  }
+
+  onEndDateChange(event: any) {
+    this.endDateValue = this.scheduleForm.get('enddate')?.value;
+    if (
+      this.scheduleForm.get('enddate')?.value !== null ||
+      this.scheduleForm.get('enddate')?.value !== ''
+    ) {
+      this.endDateFilled = true;
+    }
+    if (this.startDateFilled && this.endDateFilled) {
+      this.tabgroupdisable = false;
+    } else {
+      this.tabgroupdisable = true;
+    }
   }
 
   onToggleGroupChange(event: any) {
+    this.showTheForm = true;
     this.tabIndex = event.value ? event.value : event;
     console.log('tab', this.tabIndex);
     this.formIntitialization();
+    this.scheduleForm.get('startdate')?.setValue(this.startDateValue);
+    this.scheduleForm.get('enddate')?.setValue(this.endDateValue);
+ if(this.tabIndex==1){
+      this.hourlyTabSelected = true;
+      this.weeklyTabSelected = false;
+      this.monthlyTabSelected = false;
+      this.yearlyTabSelected = false;
+      //this.scheduleForm.controls['everyHour']=12
+      
+    }
+
+    else if(this.tabIndex==2){
+      this.hourlyTabSelected = false;
+      this.weeklyTabSelected = true;
+      this.monthlyTabSelected = false;
+      this.yearlyTabSelected = false;
+     
+    }
+
+    else if(this.tabIndex==3){
+      this.hourlyTabSelected = false;
+      this.weeklyTabSelected = false;
+      this.monthlyTabSelected = true;
+      this.yearlyTabSelected = false;
+    }
+
+    else if(this.tabIndex==4){
+      this.hourlyTabSelected = false;
+      this.weeklyTabSelected = false;
+      this.monthlyTabSelected = false;
+      this.yearlyTabSelected = true;
+    }
     if (event.value == 1) {
       this.hourlyTabSelected = true;
-
       this.weeklyTabSelected = false;
-
       this.monthlyTabSelected = false;
-
       this.yearlyTabSelected = false;
 
       this.scheduleForm.controls['everyHour'].setValidators(
@@ -744,5 +957,10 @@ this.selectedManifest=res.entityName;
       this.scheduleForm.controls['selectedday'].updateValueAndValidity();
       this.scheduleForm.controls['selectedday'].clearValidators();
     }
+  }
+
+  onClear(){
+    this.formIntitialization();
+    this.advancedTabFormIntitialization();
   }
 }

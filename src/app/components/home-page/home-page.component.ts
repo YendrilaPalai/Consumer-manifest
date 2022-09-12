@@ -23,7 +23,7 @@ export class HomePageComponent implements OnInit {
   @ViewChild('filterInput', { static: true }) filterInput: ElementRef;
 
   
-  sortLists: any = ['Sort By', 'Name'];
+  sortLists: any = ['Name'];
 
   constructor(private route:Router,private _apiService: ApiService,) {}
   finalmanifests: any[] = [];
@@ -38,7 +38,7 @@ export class HomePageComponent implements OnInit {
     this.myForm = new FormGroup({
       search: new FormControl(''),
       filter: new FormControl(''),
-      sort: new FormControl('Sort By'),
+      sort: new FormControl(''),
     });
 
     fromEvent(this.searchInput.nativeElement, 'keyup')

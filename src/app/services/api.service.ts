@@ -24,27 +24,23 @@ export class ApiService {
     return throwError(error.message || 'Server Error');
   }
 
-  // getDomainData() {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type':  'application/json',
-  //       'Authorization': 'Basic c3ZjU09JOndZQUo0Zzh4',
-  //       'Cookie': "JSESSIONID=4FA29587D7CB5E1156AAB7D90B7CDEE9; srv_id=65370fd6ab17ad44638c5d0d6f70f3ea"
-  //     })
-  //   };
-  //   const getDomainsUrl: string = `${env.API_URL+env.api+env.version+env.domains+env.getDomains}`;
-  //   return this.httpClient.get('http://localhost:1111/vicsvc/activeSkills')
-  //   .pipe(
-  //     catchError(catchError(this.errorHandler))
-  //   );
-  // }
+  headerHandler(){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Basic c3ZjU09JOndZQUo0Zzh4', 
+      })
+    };
+    return httpOptions;
+  }
 
-  public getDomainData(): Observable<any> {
-    return this.httpClient
-
-      .get('assets/domain-response1.json')
-
-      .pipe(catchError(this.errorHandler));
+  getDomainData() {
+    //http://localhost:1111/api/v1/domains/getDomains
+    const getDomainsUrl: string = `${env.API_URL+env.api+env.version+env.domains+env.getDomains}`;
+    return this.httpClient.get(getDomainsUrl,this.headerHandler())
+    .pipe(
+      catchError(catchError(this.errorHandler))
+    );
   }
 
   public getDataTypes(): Observable<any> {
@@ -56,10 +52,21 @@ export class ApiService {
   }
 
   public getAllManifest(): Observable<any> {
-    return this.httpClient
-
-      .get('assets/getAllManifests1.json')
-
-      .pipe(catchError(this.errorHandler));
+    //http://localhost:1111/api/v1/manifest/getManifests
+    const getAllManifestsUrl: string = `${env.API_URL+env.api+env.version+env.manifest+env.getManifests}`;
+    return this.httpClient.get(getAllManifestsUrl,this.headerHandler())
+    .pipe(
+      catchError(catchError(this.errorHandler))
+    );
   }
+
+  public levelSearch(keyword:any,payload:any): Observable<any>{
+      //http://localhost:1111/api/v1/domains/levelSearch/dia
+      const levelSearch: string = `${env.API_URL+env.api+env.version+env.domains+env.levelSearch+keyword}`;
+    return this.httpClient.post(levelSearch,payload,this.headerHandler())
+    .pipe(
+      catchError(catchError(this.errorHandler))
+    );
+  }
+  
 }

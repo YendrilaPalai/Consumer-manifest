@@ -18,11 +18,14 @@ export const environment: AuthorizationConfig & GeneralEnvironmentInfo  = {
 
 export const env = {
   production: false,
-  API_DEV_URL:'http://csc2cwp00001266.cloud.kp.org:1111',
-  API_URL:'https://consumer-manifest.dev.onprem-adf.kp.org',
+  API_URL:'http://localhost:1111',
+  API_DEV_URL:'https://consumer-manifest.dev.onprem-adf.kp.org',
   api:'/api',
   version:'/v1',
   domains:'/domains',
+  manifest:'/manifest',
+  getManifests:'/getManifests',
+  levelSearch:'/levelSearch/',
   getDomains:'/getDomains',
 }
 

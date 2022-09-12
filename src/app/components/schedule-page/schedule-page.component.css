@@ -53,5 +53,9 @@
   background-color: #094a8a;
   color: white !important;
 }
+.mat-button-toggle-disabled.mat-button-toggle-appearance-standard {
+  background: #9a9a9a94;
+  border:2px solid grey !important;
+}
 
 /** No CSS for this example */

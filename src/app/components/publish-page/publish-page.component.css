@@ -21,10 +21,10 @@
   background-color: #e7f0f9;
   padding: 10px;
 }
-table {
+/* table {
   width: 90%;
   margin-left: 5%;
-}
+} */
 
 .overflow-scrollbar {
   overflow-y: auto;
@@ -32,4 +32,47 @@ table {
   height: 77vh;
 
   overflow-x: hidden;
+}
+
+.paddingcontainer {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.circletoimg {
+  border: 2px solid rgb(223 227 233);
+  padding: 1%;
+  padding-left: 3%;
+}
+
+tr {
+  box-shadow: 0px 2px 18px 0px #e7f0f9;
+  background-color: white;
+  margin-top: 1px;
+}
+
+/*
+
+  .table {
+
+    border-collapse: separate;
+
+    border-spacing:0 6px;
+
+} */
+
+tbody {
+  display: block;
+  height: 277px;
+  overflow: auto;
+}
+
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* even columns width , fix width of table too*/
+  box-shadow: 0px 2px 18px 0px #e7f0f9;
+  background-color: white;
+  margin-top: 8px;
 }

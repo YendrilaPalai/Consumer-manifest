@@ -268,7 +268,15 @@ export class SplitWindowComponent implements OnInit {
   }
 
   //on click of search button
-  onSearch(searchkeys: any) {}
+  onSearch(searchkeys: any) {
+    console.log('sear',searchkeys);
+    let searchPayload = { "domains" : this.selectedDomainName}
+    this._apiService.levelSearch(searchkeys,searchPayload).subscribe((response: any) => {
+     console.log('searres',response);
+     //this.changeAction(response.domains);
+     //this.selectedDomainName = response.domains;
+    });
+  }
 
   //success popup
 

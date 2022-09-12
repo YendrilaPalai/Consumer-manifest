@@ -23,3 +23,16 @@ export const environment: AuthorizationConfig & GeneralEnvironmentInfo  = {
   scope: 'profile openid email',
   extras: { 'access_type': 'offline'}, 
 };
+
+export const env = {
+  production: false,
+  API_URL:'http://localhost:1111',
+  API_DEV_URL:'https://consumer-manifest.dev.onprem-adf.kp.org',
+  api:'/api',
+  version:'/v1',
+  domains:'/domains',
+  manifest:'/manifest',
+  getManifests:'/getManifests',
+  levelSearch:'/levelSearch/',
+  getDomains:'/getDomains',
+}

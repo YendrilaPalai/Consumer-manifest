@@ -169,7 +169,7 @@ export class FilterComponent implements OnInit {
     console.log(filterdata, 'newString');
     }
     else{
-    filterdata.columnCalName = this.advancedTabForm.get('columnCalName')?.value;
+    //filterdata.columnCalName = this.advancedTabForm.get('columnCalName')?.value;
     filterdata.columnFormula = this.advancedTabForm.get('columnFormula')?.value;
     }
     let data = {
@@ -200,7 +200,7 @@ export class FilterComponent implements OnInit {
 
   advancedTabFormIntitialization(){
     this.advancedTabForm = new FormGroup({
-      columnCalName: new FormControl('', [Validators.required]),
+      //columnCalName: new FormControl('', [Validators.required]),
       columnFormula: new FormControl('', [Validators.required]),
     });
   }
@@ -241,7 +241,7 @@ export class FilterComponent implements OnInit {
       this.simpleTabClicked = false;
       this.manualTabClicked = true;
       this.advancedTabForm = new FormGroup({
-        columnCalName: new FormControl(this.filterRowdata.columnCalName),
+        //columnCalName: new FormControl(this.filterRowdata.columnCalName),
         columnFormula: new FormControl(this.filterRowdata.columnFormula)
       });
     }

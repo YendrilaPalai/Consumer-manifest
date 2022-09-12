@@ -10,7 +10,7 @@
       <div class="container-fluid containerDesign">
         <!-- basic and advance div here -->
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6" style="padding-right: 0px">
             <div
               class="card card-height card-border"
               (click)="clickOnSimple()"
@@ -19,7 +19,7 @@
               <div class="card-text">Basic</div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" style="padding-left: 0px">
             <div
               class="card card-height card-border"
               (click)="clickOnManual()"
@@ -131,7 +131,7 @@
             <form [formGroup]="myForm">
               <div class="row">
                 <div class="col-4">
-                  <label>Select a Data Source</label>
+                  <label>Select a Data Source<span class="asterisk">*</span></label>
 
                   <select
                     class="form-control mb-3"
@@ -150,7 +150,7 @@
                   </select>
                 </div>
                 <div class="col-4">
-                  <label>Select a Entity</label>
+                  <label>Select a Table<span class="asterisk">*</span></label>
 
                   <select
                     class="form-control mb-3"
@@ -158,7 +158,7 @@
                     (change)="onchangetable($event)"
                   >
                     <option disabled selected value="">
-                      - Select a Entity -
+                      - Select a Table -
                     </option>
                     <option
                       *ngFor="let entity of entityList"
@@ -169,11 +169,11 @@
                   </select>
                 </div>
                 <div class="col-4">
-                  <label>Select a Attribute</label>
+                  <label>Select a Column<span class="asterisk">*</span></label>
 
                   <select class="form-control mb-3" formControlName="column" (change)="onChangeColumn($event)">
                     <option disabled selected value="">
-                      - Select a Attribute -
+                      - Select a Column -
                     </option>
                     <option
                       *ngFor="let attr of entityAttrList"
@@ -186,7 +186,7 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <label>Select a Operator</label>
+                  <label>Select a Operator<span class="asterisk">*</span></label>
                   <select class="form-control mb-3" formControlName="operation">
                     <option disabled selected value="">
                       - Select a Operator -
@@ -220,12 +220,12 @@
         <div class="row" *ngIf="manualTabClicked">
           <div class="container-fluid background-container">
             <form [formGroup]="advancedTabForm">
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label>Enter Name of Calculated Column</label>
                 <input type="text" class="form-control" formControlName="columnCalName">
-              </div>
+              </div> -->
               <div class="form-group">
-                <label>Enter Formula For New Column</label>
+                <label>Enter Filter condition<span class="asterisk">*</span></label>
                 <textarea class="form-control" formControlName="columnFormula" rows="5"></textarea>
               </div>
             </form>

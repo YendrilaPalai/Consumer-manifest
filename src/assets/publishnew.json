@@ -1,80 +1,95 @@
 [
-    {
-      "entitySk": 2,
-      "entityId": "diabetes_scal_adult_cohort",
-      "entityName": "diabetes_scal_adult_cohort",
-      "entityDesc": "diabetes_scal_adult_cohort Store",
-      "entitySrc": "entitySrc value",
-      "sourceType": "sourceType value",
-      "expression": "expression value",
-      "locationId": "locationId value",
-      "entityTypeId": "entityTypeId value",
-      "cronExpr": "*/15 * * * *",
-      "status": "Published",
-      "createTs": 1660521414983,
-      "consId": 1,
-      "domainId": 1,
-      "domainName": "rds_feature_store"
-      
-    },
-    {
-      "entitySk": 3,
-      "entityId": "LOC",
-      "entityName": "LOCCONS",
-      "entityDesc": "LOCCONS",
-      "entitySrc": "location_store",
-      "sourceType": "locationId",
-      "cronExpr": "0 0 1 * *",
-      "status": "Published",
-      "createTs": 1660786908931,
-      "consId": 1,
-      "domainId": 1,
-      "domainName": "rds_feature_store"
-      
+  {
+    "entitySk": 2,
+    "entityId": "diabetes_scal_adult_cohort",
+    "entityName": "diabetes_scal_adult_cohort",
+    "entityDesc": "diabetes_scal_adult_cohort Store",
+    "entitySrc": "entitySrc value",
+    "sourceType": "sourceType value",
+    "expression": "expression value",
+    "locationId": "locationId value",
+    "entityTypeId": "entityTypeId value",
+    "cronExpr": "4 16/2 ? * ?",
+    "status": "Published",
+    "createTs": 1660521414983,
+    "consId": 1,
+    "domainId": 1,
+    "domainName": "rds_feature_store",
+    "startDate":"09/22/2022",
+    "endDate":"09/28/2022"
+
+    
   },
-    {
-      "entitySk": 6,
-      "entityId": "CON",
-      "entityName": "CONDITION",
-      "entityDesc": "CONDITION",
-      "entitySrc": "DiabCoh_store",
-      "sourceType": "ConditionId",
-      "cronExpr": "0 11 * * *",
-      "status": "Published",
-      "createTs": 1660885261490,
-      "consId": 1,
-      "domainId": 1,
-      "domainName": "rds_feature_store"
-     
+  {
+    "entitySk": 3,
+    "entityId": "LOC",
+    "entityName": "LOCCONS",
+    "entityDesc": "LOCCONS",
+    "entitySrc": "location_store",
+    "sourceType": "locationId",
+    "cronExpr": "8 15 ? * 2",
+    "status": "Published",
+    "createTs": 1660786908931,
+    "consId": 1,
+    "domainId": 1,
+    "domainName": "rds_feature_store",
+    "startDate":"2022-11-12",
+    "endDate":"2022-12-18"
+
+    
+},
+  {
+    "entitySk": 6,
+    "entityId": "CON",
+    "entityName": "CONDITION",
+    "entityDesc": "CONDITION",
+    "entitySrc": "DiabCoh_store",
+    "sourceType": "ConditionId",
+    "cronExpr": "6 16 ? * 3#2",
+    "status": "Published",
+    "createTs": 1660885261490,
+    "consId": 1,
+    "domainId": 1,
+    "domainName": "rds_feature_store",
+    "startDate":"2022-10-12",
+    "endDate":"2022-11-18"
+
+   
+  },
+  {
+    "entitySk": 7,
+    "entityId": "PRO",
+    "entityName": "PROCONS",
+    "entityDesc": "PROCONS",
+    "entitySrc": "procedure_store",
+    "cronExpr": "1 17 ? 10 3#2",
+    "status": "Published",
+    "sourceType": "id",
+    "createTs": 1661045012454,
+    "consId": 1,
+    "domainId": 1,
+    "domainName": "rds_feature_store",
+    "startDate":"2022-11-12",
+    "endDate":"2022-12-02"
+
+   
     },
-    {
-      "entitySk": 7,
-      "entityId": "PRO",
-      "entityName": "PROCONS",
-      "entityDesc": "PROCONS",
-      "entitySrc": "procedure_store",
-      "cronExpr": "0 8 * * *",
-      "status": "Published",
-      "sourceType": "id",
-      "createTs": 1661045012454,
-      "consId": 1,
-      "domainId": 1,
-      "domainName": "rds_feature_store"
-     
-      },
-    {
-      "entitySk": 8,
-      "entityId": "PAT",
-      "entityName": "PATIENTINFO",
-      "entityDesc": "PATIENT INFO",
-      "entitySrc": "patient_store",
-      "cronExpr": "*/45 * * * *",
-      "status": "Published",
-      "sourceType": "id",
-      "createTs": 1661045609362,
-      "consId": 1,
-      "domainId": 1022,
-      "domainName": "PatientProcedureHbase"
-      
-      }
-  ]
+  {
+    "entitySk": 8,
+    "entityId": "PAT",
+    "entityName": "PATIENTINFO",
+    "entityDesc": "PATIENT INFO",
+    "entitySrc": "patient_store",
+    "cronExpr": "*/45 * * * *",
+    "status": "Published",
+    "sourceType": "id",
+    "createTs": 1661045609362,
+    "consId": 1,
+    "domainId": 1022,
+    "domainName": "PatientProcedureHbase",
+    "startDate":"2022-12-12",
+    "endDate":"2022-12-22"
+
+    
+    }
+]

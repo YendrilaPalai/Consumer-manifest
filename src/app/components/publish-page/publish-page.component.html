@@ -1,11 +1,11 @@
-<app-header></app-header>
-<div class="m-2">
+<app-header *ngIf="!schedulepageFlag"></app-header>
+<div class="m-2" *ngIf="!schedulepageFlag">
   <button (click)="onBackClick()" class="btn btn-primary">Back</button>
 </div>
-<div class="qnA-hr-line"></div>
+<div class="qnA-hr-line" *ngIf="!schedulepageFlag"></div>
 <br />
-<div class="container-fluid">
-  <div class="row">
+<div class="container-fluid paddingcontainer">
+  <div class="row" *ngIf="!schedulepageFlag">
     <div class="col-8" style="color: #003b71">
       <strong class="ml-3">Search a Manifest</strong>
       <input
@@ -30,16 +30,16 @@
     </div>
   </div>
   <br />
-  <div class="row container-fluid mt-3">
-    <div class="headercss">
-      <div class="container mt-5">
-        <table class="table table-striped">
+  <div class="row mt-3" style="padding-bottom:30px ;">
+    <div class="headercss col-12">
+<span style="height:30px ;overflow-y:auto;">
+        <table class="table">
           <thead>
             <tr>
               <!-- <th>Id</th> -->
               <th>Name</th>
               <th>Schedule</th>
-              <th>Publish details</th>
+              <th style="width: 598px;">Publish details</th>
               <th>Status</th>
               <th>Active</th>
               <th>Actions</th>
@@ -54,7 +54,7 @@
               <!-- <td >{{publishListVal}}</td> -->
               <td>{{user.entityName}}</td>
               <td>{{user.cronExpr}}</td>
-              <td>{{user.publish}}</td>
+              <td style="width: 598px;">{{user.publish}}</td>
               
               <td *ngIf="user.publish !== 'Not available'">
                 <mat-slide-toggle
@@ -67,18 +67,22 @@
               </td> -->
               <td>{{user.flag}}</td>
               <td *ngIf="user.publish !== 'Not available'">
+                <span class="circletoimg">
                 <img
                   id="pastchatview"
                   style="width: 20px; height: 20px"
                   src="../../../assets/img/edit.svg"
                   (click)="editPublish(user)"
                 />
+              </span>
                 &nbsp;
+                <span class="circletoimg">
                 <img
                   id="pastchatview"
                   style="width: 20px; height: 20px"
                   src="../../../assets/img/delete.svg"
                 />
+                </span>
               </td>
               <td *ngIf="user.publish === 'Not available'">
                 <button class="btn btn-primary">Publish</button>
@@ -86,7 +90,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </span>
     </div>
   </div>
 </div>
