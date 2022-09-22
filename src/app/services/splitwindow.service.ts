@@ -11,6 +11,7 @@ export class SplitwindowService {
   );
   publishManifestData: BehaviorSubject<any> = new BehaviorSubject<any>([]);
   schedulecrondata: BehaviorSubject<any> = new BehaviorSubject<any>({});
+  sendthescheduleName: BehaviorSubject<any> = new BehaviorSubject<any>({});
 
   constructor() {}
 

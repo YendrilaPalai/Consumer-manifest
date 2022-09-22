@@ -1,7 +1,28 @@
 {
-    "listofdatatype" : [
-        {"type": "string", "image": "src/assets/img/Character.svg","operators": ["IN", "BETWEEN-AND", "IS NULL", "LIKE"]},
-        {"type": "number", "image": "src/assets/img/NUMBER.svg","operators": [">", "<", "==", "!=", ">=", "<="]},
-        {"type": "date", "image": "src/assets/img/Calendar today.svg","operators": [">", "<", "==", "!=", ">=", "<="]}
-    ]
+  "listofdatatype": [
+    {
+      "type": "string",
+      "dataTypes":["CHAR","VARCHAR","VARCHAR2","TEXT","NCHAR","NVARCHAR","NTEXT","CLOB","NCLOB","STRING"],
+      "image": "src/assets/img/Character.svg",
+      "operators": ["=",">","<",">=","<=","<>","!=","LIKE","NOT LIKE","IN","NOT IN","IS NULL","IS NOT NULL"]
+    },
+    {
+      "type": "number",
+      "dataTypes":["BIT","TINYINT","SMALLINT","BIGINT","INT","INTEGER","DOUBLE","DECIMAL","FLOAT","REAL","NUMBER"],
+      "image": "src/assets/img/NUMBER.svg",
+      "operators": ["=",">","<",">=","<=","<>","!=","BETWEEN","IN","NOT IN"]
+    },
+    {
+      "type": "date",
+      "dataTypes":["DATE","DATETIME","DATETIME2","TIMESTAMP"],
+      "image": "src/assets/img/Calendar today.svg",
+      "operators": ["=",">","<",">=","<=","<>","!=","BETWEEN","IN","NOT IN","IS NULL","IS NOT NULL"]
+    },
+    {
+      "type": "complex",
+      "dataTypes":["BLOB","RAW","LONG RAW","BINARY","VARBINARY","IMAGE"],
+      "image": "src/assets/img/Calendar today.svg",
+      "operators": ["=","<>","!=","IS NULL","IS NOT NULL"]
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Attribute, Component, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
@@ -15,6 +15,10 @@ import {
   EntitySave,
 } from 'src/app/interface/savemanifest-interface';
 import { SuccessPopupComponent } from 'src/app/common/success-popup/success-popup.component';
+import { SnackbarComponent } from 'src/app/common/snackbar/snackbar.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Constants } from 'src/app/constants/constants';
+import { Domainn, Entity, EntityAttribute } from 'src/app/interface/split-interface';
 
 @Component({
   selector: 'app-split-window',
@@ -24,11 +28,13 @@ import { SuccessPopupComponent } from 'src/app/common/success-popup/success-popu
 export class SplitWindowComponent implements OnInit {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
   @ViewChild('table') table: MatTable<Element>;
+  const:any={};
   displayedColumns: string[] = ['attrName', 'position'];
   domData: any;
   level: any;
   toppings = new FormControl('');
   selectedDomainName: any = [];
+  searchTaggedResult:any = [];
   searchResult: any;
   searchText = '';
   storeDomainNameListfromService: any[] = [];
@@ -52,24 +58,54 @@ export class SplitWindowComponent implements OnInit {
   editClickedForJoin: boolean = false;
   selecteddomainforjoin: any[] = [];
   disablePublishbtn: boolean = true;
+  loadSpinner: boolean = false;
+  clickedSearchBtn: boolean = false;
+  searchBtnName:string = "Search";
 
   constructor(
     private _splitwindowService: SplitwindowService,
     private _apiService: ApiService,
     private router: Router,
     public dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private _joinDataService: JoinDataService
   ) {}
 
   ngOnInit(): void {
-    this._apiService.getDomainData().subscribe((response: any) => {
-      console.log('res', response);
-      this.domData = response;
-    });
+    //localStorage.setItem('manifestDetails','');
+    this.const["saveTooltip"]=Constants.saveText;
+    this.const["scheduleTooltip"]=Constants.scheduleText;
+    this.const["clearTooltip"]=Constants.clearText;
+    this.const["joinTooltip"]=Constants.joinText;
+    this.const["filterTooltip"]=Constants.filterText;
+    this.const["editTooltip"]=Constants.editText;
+    this.const["deleteTooltip"]=Constants.deleteText;
+    this.const["saveDatatype"]=Constants.saveData;
+    this.const["showFilterTooltip"]=Constants.showFilter;
+    this.const["deleteFilterTooltip"]=Constants.deleteFilter;
+    this.const["editJoinTooltip"]=Constants.editJoin;
+    this.const["deleteJoinTooltip"]=Constants.deleteJoin;
+   this.getDataTypes();
+   this.getSourceDataOnCreateManifest();
+  }
 
+  getSourceDataOnCreateManifest(){
+    this.loadSpinner =  true;
+    this._apiService
+      .getSourceDataOnCreateManifest()
+      .subscribe((response: any) => {
+        console.log('res', response);
+        this.domData = response;
+        this.loadSpinner =  false;
+      });
+  }
+
+  getDataTypes(){
+    //this.loadSpinner =  true;
     this._apiService.getDataTypes().subscribe((response: any) => {
       console.log('data', response.listofdatatype);
       this.listofdatatype = response.listofdatatype;
+      //this.loadSpinner =  false;
     });
   }
 
@@ -102,12 +138,14 @@ export class SplitWindowComponent implements OnInit {
     });
     selectedEntityData.entityDisableFlag =
       isAttrFlagDisabled < 1 ? true : false;
-    let count =0;
-    this.selectedDomainName.forEach((eachdom:any) => {
-      if(eachdom.displayDomainTargetPanel){
-        eachdom.entities.forEach((eachen:any) => {
-          if(eachen.displayEntityTargetPanel){count += 1;}
-        });  
+    let count = 0;
+    this.selectedDomainName.forEach((eachdom: any) => {
+      if (eachdom.displayDomainTargetPanel) {
+        eachdom.entities.forEach((eachen: any) => {
+          if (eachen.displayEntityTargetPanel) {
+            count += 1;
+          }
+        });
       }
     });
     this.disableJoinBtn = count >= 2 ? false : true;
@@ -269,13 +307,43 @@ export class SplitWindowComponent implements OnInit {
 
   //on click of search button
   onSearch(searchkeys: any) {
-    console.log('sear',searchkeys);
-    let searchPayload = { "domains" : this.selectedDomainName}
-    this._apiService.levelSearch(searchkeys,searchPayload).subscribe((response: any) => {
-     console.log('searres',response);
-     //this.changeAction(response.domains);
-     //this.selectedDomainName = response.domains;
-    });
+    if(this.searchBtnName==="Search"){
+    this.clickedSearchBtn = true;
+    //this.searchText = '';
+    this.searchTaggedResult = [];
+    this.searchBtnName = "Clear"
+    console.log('sear', searchkeys);
+    let searchPayload = { domains: this.selectedDomainName };
+    this._apiService
+      .levelSearch(searchkeys, searchPayload)
+      .subscribe((response: any) => {
+        console.log('searres', response);
+        response.domains.forEach((eachDom:Domainn) => {
+          eachDom.tag = true;
+          eachDom.entities.forEach((eachEnt:Entity) => {
+            eachEnt.tag = true;
+            eachEnt.entityAttributes.forEach((eachAttr:EntityAttribute)=>{
+              eachAttr.tag = true;
+            })
+          })
+        });
+        this.searchTaggedResult = response.domains;
+        console.log('tagged',this.searchTaggedResult);
+      });}else{
+        this.searchTaggedResult = [];
+        this.clickedSearchBtn = false;
+        this.searchBtnName = "Search";
+        this.searchText = '';
+        // this.selectedDomainName.domains.forEach((eachDom:Domainn) => {
+        //   eachDom.tag = false;
+        //   eachDom.entities.forEach((eachEnt:Entity) => {
+        //     eachEnt.tag = false;
+        //     eachEnt.entityAttributes.forEach((eachAttr:EntityAttribute)=>{
+        //       eachAttr.tag = false;
+        //     })
+        //   })
+        // });
+      }
   }
 
   //success popup
@@ -283,65 +351,120 @@ export class SplitWindowComponent implements OnInit {
   opensuccesspopup() {
     const dialogRef = this.dialog.open(SuccessPopupComponent, {
       width: '30%',
-      height: '40%',
+      height: '70%',
       data: {
         popupdata: 'created',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => { console.log('hfg',result);if(result?.fileName){this.onCreateManifest(result)}});
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('hfg', result);
+      if (result?.fileName) {
+        this.onCreateManifest(result);
+      }
+    });
   }
 
   //on click of create manifest
-  onCreateManifest(res:any) {
-    console.log('resultfile',res);
+  onCreateManifest(res: any) {
+    console.log('resultfile', res);
+   
+    this._splitwindowService.sendthescheduleName.next(res);
     this.disablePublishbtn = false;
+    let saveEntityList = {} as EntitySave;
+    let saveAttributesList: EntityAttributeSave[] = [] as EntityAttributeSave[];
     this.selectedDomainName.forEach((eachTarDomain: any) => {
       if (eachTarDomain.displayDomainTargetPanel) {
-        let saveEntityList = {} as EntitySave;
         eachTarDomain.entities.forEach((eachEntity: any) => {
           if (eachEntity.displayEntityTargetPanel) {
-            saveEntityList.entitySk = eachEntity.entitySk;
-            saveEntityList.entityId = eachEntity.entityId;
-            saveEntityList.entityName = eachEntity.entityName;
-            saveEntityList.entityDesc = eachEntity.entityDesc;
-            saveEntityList.entitySrc = eachEntity.entitySrc;
-            saveEntityList.sourceType = eachEntity.sourceType;
-            let saveAttributesList: EntityAttributeSave[] =
-              [] as EntityAttributeSave[];
-            //saveAttributesList = [] as EntityAttributeSave[];
-            let attrlist = {} as EntityAttributeSave;
             eachEntity.entityAttributes.forEach((eachAttr: any) => {
+              let attrlist = {} as EntityAttributeSave;
               if (eachAttr.entityAttributeDisableFlag) {
-                attrlist.attrSk = eachAttr.attrSk;
-                attrlist.attrName = eachAttr.attrName;
-                attrlist.attrDesc = eachAttr.attrDesc;
                 attrlist.attrComment = eachAttr.attrComment;
-                attrlist.entitySrc = eachEntity.entitySrc;
-                attrlist.domainSrc = eachTarDomain.domainName;
-                attrlist.dataType = eachAttr.dataType;
+                attrlist.attrDesc = eachAttr.attrDesc;
                 attrlist.attrLength = eachAttr.attrLength;
-                attrlist.position = eachAttr.position;
-                attrlist.colGrpName = eachAttr.colGrpName;
+                attrlist.attrName = eachAttr.attrName;
+                attrlist.attrSk = eachAttr.attrSk;
+                attrlist.attrTags = eachAttr.attrTags;
                 attrlist.colGrpLvl = eachAttr.colGrpLvl;
+                attrlist.colGrpName = eachAttr.colGrpName;
                 attrlist.createTs = eachAttr.createTs;
+                attrlist.dataType = eachAttr.dataType;
+                attrlist.defaultValue = eachAttr.defaultValue;
+                attrlist.domainSrc = eachTarDomain.domainName;
+                attrlist.entitySrc = eachEntity.entityName;
                 attrlist.lastUpdtTs = eachAttr.lastUpdtTs;
-                attrlist.tgtValSrcJson =  eachAttr.attrDesc;
+                attrlist.position = eachAttr.position;
+                //attrlist.tgtValSrcJson = eachAttr.;
+                //attrlist.tgtValSrcOthr = eachAttr.;
+                //attrlist.tgtValSrcSql = eachAttr.;
+                //attrlist = {} as EntityAttributeSave;
                 saveAttributesList.push(attrlist);
-                attrlist = {} as EntityAttributeSave;
               }
+
+              //attrlist = {} as EntityAttributeSave;
             });
-            saveEntityList.entityAttributes = saveAttributesList;
-            this.saveManifestList.push(saveEntityList);
-            saveEntityList = {} as EntitySave;
+            //saveEntityList.entityAttributes = saveAttributesList;
+            // this.saveManifestList.push(saveEntityList);
+            // saveEntityList = {} as EntitySave;
           }
         });
       }
     });
-    console.log(
-      'save manifest',
-      this.selectedDomainName,
-      this.saveManifestList
-    );
+
+    //request payload for create manifest
+    //saveEntityList.consId = res.targetConsumer.consId;
+    //saveEntityList.createTs = ;
+    //saveEntityList.cronExpr = ;
+    //saveEntityList.domainId = res.targetDomain.domainId;
+    //saveEntityList.domainName = res.targetDomain.domainName;
+    saveEntityList.entityAttributes = saveAttributesList;
+    //saveEntityList.entitySk = 0;
+    //saveEntityList.entityTypeId = ;
+    //saveEntityList.expression = ;
+    //saveEntityList.lastUpdtTs = ;
+    //saveEntityList.locationId = ;
+    saveEntityList.manifestDesc = res.fileName;
+    saveEntityList.manifestId = 0;
+    saveEntityList.manifestName = res.fileName;
+    saveEntityList.manifestSrc = res.fileName;
+    saveEntityList.sourceType = res.fileName;
+    saveEntityList.status = "InActive";
+
+    console.log('save manifest', this.selectedDomainName, saveEntityList);
+    
+    this._apiService
+      .createManifest(res.targetDomain, res.targetConsumer, saveEntityList)
+      .subscribe((response: any) => {
+        console.log('data',res,response);
+        if (response) {
+          this.disableFilterBtn = true;
+          this.disableJoinBtn = true;
+          localStorage.setItem('manifestDetails', JSON. stringify(response));
+          this.successMessageInSnackbar("Manifest Created Successfully");
+        }
+        //this.listofdatatype = response.listofdatatype;
+      });
+  }
+
+  //errormsg populate on snackbar
+  errorMessageInSnackbar(errormsg: any) {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      data: errormsg,
+      panelClass: ['custom-style'],
+      duration: 10000,
+      verticalPosition: 'top', // Allowed values are  'top' | 'bottom'
+      horizontalPosition: 'right', // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
+  }
+
+  successMessageInSnackbar(successmsg: any) {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      data: successmsg,
+      panelClass: ['custom-success'],
+      duration: 1000000,
+      verticalPosition: 'top', // Allowed values are  'top' | 'bottom'
+      horizontalPosition: 'right', // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
   }
 
   //opening the filter dialog
@@ -367,7 +490,7 @@ export class SplitWindowComponent implements OnInit {
     }
   }
 
-  onPublishClick(){
+  onPublishClick() {
     this.router.navigate(['/schedule']);
   }
 

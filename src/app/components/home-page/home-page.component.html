@@ -1,4 +1,5 @@
 <app-header></app-header>
+<app-progress-bar *ngIf="loadSpinner" class="spinner_overlay"></app-progress-bar>
 <div class="container-fluid container-size">
   <div class="row row-pad justify-content-center">
     <div class="col-4">
@@ -65,19 +66,18 @@
         <form [formGroup]="myForm">
           <div class="row mx-4">
             <div class="col-4">
-              <label>Search a Manifest</label>
+              <label style="color: #4f4f4f">Search a Manifest</label>
               <input
                 type="text"
                 #searchInput
                 formControlName="search"
-                placeholder="Search"
                 class="form-control"
               />
             </div>
             <div class="col-4">
-              <label>Sort By</label>
+              <label style="color: #4f4f4f">Sort By</label>
                 <select
-                  class="form-select mb-3"
+                  class="form-control mb-3"
                   (ngModelChange)="changeSort($event)"
                   formControlName="sort"
                 >
@@ -90,12 +90,11 @@
                 </select>
               </div>
             <div class="col-4">
-              <label>Filter</label>
+              <label style="color: #4f4f4f">Filter</label>
               <input
                 type="text"
                 #filterInput
                 formControlName="filter"
-                placeholder="Filter"
                 class="form-control"
               />
             </div>

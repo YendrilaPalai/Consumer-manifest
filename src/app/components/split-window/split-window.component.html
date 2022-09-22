@@ -1,18 +1,21 @@
 <app-header></app-header>
+<app-progress-bar *ngIf="loadSpinner" class="spinner_overlay"></app-progress-bar>
 <ng-container *ngIf="openSplitComponent == true">
-  <div class="m-2">
+  <div class="m-1">
     <button (click)="onBackClick()" class="btn btn-primary">Back</button>
   </div>
   <div class="qnA-hr-line"></div>
-  <div class="container-fluid" style="padding-top: 2%">
+  <div class="container-fluid" style="padding-top: 0.5%">
     <div class="row col-md-12">
-      <div class="col-md-10">
-        <mat-form-field
+       <div class="col-md-10 row">
+        <label class="label-style" style="padding-left: 2%;">Select Data Source</label>
+   <mat-form-field
+   [floatLabel]="'never'"
           appearance="fill"
           class="mat-fieldcss"
-          style="width: 25%; padding-left: 1%"
+          style="width: 25%; padding-left: 2%;"
         >
-          <mat-label>Select Data Source</mat-label>
+          <!-- <mat-label>Select Data Source</mat-label> -->
 
           <mat-select
             [formControl]="toppings"
@@ -23,6 +26,7 @@
             <mat-option
               *ngFor="let domain of domData?.domains"
               [value]="domain"
+ class="domain-style"
               >{{ domain.domainName }}</mat-option
             >
           </mat-select>
@@ -30,44 +34,49 @@
       </div>
       <!-- save and publish div starts here -->
       <div *ngIf="showRightPanel" class="col-md-2">
-        <button
+        <span  
+   [matTooltipPosition]="'below'"
+   [matTooltip]="disableFilterBtn ? const.saveTooltip : const.saveTooltip"><button
           type="button"
           [disabled]="disableFilterBtn"
           (click)="opensuccesspopup()"
-          class="btn btn-primary"
+          class="btn btn-primary save-btn-style"
         >
           Save</button
-        >&nbsp;&nbsp;
-
-        <button type="button" (click)="onPublishClick()" [disabled]="disablePublishbtn"  class="btn btn-primary">Schedule</button>
+        ></span>&nbsp;&nbsp;
+        <span  
+        [matTooltipPosition]="'below'"
+        [matTooltip]="disablePublishbtn ? const.scheduleTooltip : const.scheduleTooltip">
+        <button type="button" (click)="onPublishClick()" [disabled]="disablePublishbtn"  class="btn btn-primary schedule-btn-style">Schedule</button></span>
       </div>
       <!-- save and publish div ends here -->
     </div>
   </div>
 
-  <div class="container-fluid mt-3">
+  <div class="container-fluid">
     <div class="col-md-12">
       <div class="row pad-screen">
         <!-- left pannel div code starts from here -->
         <div *ngIf="selectedDomainName" class="col-md-6">
           <div [hidden]="!showRightPanel" class="mb-3">
             <div class="row">
-              <div class="col-md-10">
+            <label class="label-style">Search available Domains or Entities</label>
+              <div class="col-md-9">
                 <input
                   type="text"
                   class="form-control"
                   [(ngModel)]="searchText"
-                  placeholder="Search available Domains or Entities"
                 />
               </div>
-              <div class="col-md-2">
-                <button class="btn btn-primary" (click)="onSearch(searchText)">
-                  Search
+              <div class="col-md-3">
+                <button class="btn btn-primary searchbtnstyle" (click)="onSearch(searchText)">
+                  {{searchBtnName}}
                 </button>
               </div>
             </div>
           </div>
-          <div class="overflow-scrollbar">
+          <!-- if clear is clicked div starts here   -->
+          <div *ngIf="!clickedSearchBtn" class="overflow-scrollbar">
             <mat-accordion class="example-headers-align" multi>
               <div
                 class="pad-bottom"
@@ -75,7 +84,7 @@
               >
                 <h4 class="headercss">{{ domain.domainName }}</h4>
 
-                <div class="containerDesign">
+                <div class="containerDesignleft">
                   <mat-expansion-panel
                     [expanded]="false"
                     *ngFor="let entity of domain.entities"
@@ -83,14 +92,16 @@
                     #panel
                   >
                     <mat-expansion-panel-header>
-                      <mat-panel-title>
+                      <mat-panel-title class="entitystyle">
                         <img
+style="width:8%"
                           *ngIf="panel.expanded"
-                          src="../../../assets/dash-circle.svg"
+                          src="../../../assets/Open arrow.svg"
                         />
                         <img
+style="width:8%"
                           *ngIf="!panel.expanded"
-                          src="../../../assets/plus-circle.svg"
+                          src="../../../assets/close arrow.svg"
                         />
                         &nbsp;{{ entity.entityName }}
                       </mat-panel-title>
@@ -116,7 +127,7 @@
                     >
                       <!-- Name Column -->
                       <ng-container matColumnDef="attrName">
-                        <td mat-cell *matCellDef="let element">
+                        <td mat-cell *matCellDef="let element"  class="attrstyle">
                           <span
                             *ngIf="element?.dataType.toLowerCase() === 'string'"
                             ><img
@@ -173,16 +184,105 @@
               </div>
             </mat-accordion>
           </div>
+          <!-- if clear is clicked div ends here   -->
+
+          <!-- if search is clicked div starts here   -->
+          <div *ngIf="clickedSearchBtn" class="overflow-scrollbar">
+            <mat-accordion class="example-headers-align" multi>
+              <div
+                class="pad-bottom"
+                *ngFor="let domain of searchTaggedResult; let i; as: index"
+              >
+                <h4 *ngIf="domain.tag" class="headercss">{{ domain.domainName }}</h4>
+
+                <div class="containerDesignleft">
+                  <mat-expansion-panel
+                    [expanded]="false"
+                    *ngFor="let entity of domain.entities"
+                    hideToggle
+                    #panel
+                  >
+                    <mat-expansion-panel-header>
+                      <mat-panel-title class="entitystyle" *ngIf="entity.tag">
+                        <img
+style="width:8%"
+                          *ngIf="panel.expanded"
+                          src="../../../assets/Open arrow.svg"
+                        />
+                        <img
+style="width:8%"
+                          *ngIf="!panel.expanded"
+                          src="../../../assets/close arrow.svg"
+                        />
+                        &nbsp;{{ entity.entityName }}
+                      </mat-panel-title>
+                      <button
+                        *ngIf="entity.entityDisableFlag === false && entity.tag"
+                        class="btn btn-primary"
+                        (click)="onAddAllClick(domain, entity)"
+                      >
+                        Add All
+                      </button>
+                      <button
+                        *ngIf="entity.entityDisableFlag === true && entity.tag"
+                        class="btn btn-success"
+                        [disabled]="entity.entityDisableFlag"
+                      >
+                        Added<mat-icon [ngStyle]="{'color':'green'}">done</mat-icon>
+                      </button>
+                    </mat-expansion-panel-header>
+                    <table #table class="table">
+                      <tbody *ngFor="let attr of entity.entityAttributes">
+                        <tr *ngIf="attr.tag === true">
+                          <td style="padding-top: 3%">
+                            <span
+                            *ngIf="attr?.dataType.toLowerCase() === 'string'"
+                            ><img
+                              id="pastchatview"
+                              style="font-size: 1rem"
+                              src="../../../assets/img/Character.svg"
+                          /></span>
+                          <span *ngIf="attr?.dataType === 'number'"
+                            ><img
+                              id="pastchatview"
+                              style="font-size: 1rem"
+                              src="../../../assets/img/NUMBER.svg"
+                          /></span>
+                          <span *ngIf="attr?.dataType === 'date'"
+                            ><img
+                              id="pastchatview"
+                              style="font-size: 1rem"
+                              src="../../../assets/img/Calendar today.svg"
+                          /></span><span class="attrstyle"> {{ attr.attrName }}</span>
+                          </td>
+                          <!-- <td class="attrstyle">
+                            {{ attr.attrName }}
+                          </td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
+                </div>
+              </div>
+            </mat-accordion>
+          </div>
+          <!-- if search is clicked div ends here   -->
         </div>
         <!-- left pannel div code ends here -->
-        <div class="col-md-1"></div>
+        <div  [hidden]="!showRightPanel" class="col-md-1" >
+          <div class="headerDivider"></div>
+           <!-- <mat-divider vertical class="divider-style"></mat-divider> -->
+          </div>
         <!-- right pannel div code starts from here -->
         <div *ngIf="showRightPanel" class="col-md-5 containerDesign">
           <!-- clearall and selectors label div starts here -->
           <div class="container-fluid row mb-4">
-            <div class="col-9" style="color: #b4b4b4">Selectors</div>
+            <div class="col-10" style="color: #b4b4b4">Selectors</div>
 
-            <div class="col-3">
+            <div class="col-2">
+              <span  
+                [matTooltipPosition]="'left'"
+                [matTooltip]="disablePublishbtn ? const.clearTooltip : const.clearTooltip">
               <button
                 type="button"
                 class="btn btn-primary"
@@ -190,15 +290,15 @@
                 (click)="clearAllSelectors()"
               >
                 Clear All
-              </button>
+              </button></span>
             </div>
           </div>
           <!-- clearall and selectors label div ends here -->
           <!-- no selectors content div starts here -->
           <div class="container-fluid overflow-scrollbar2">
             <div *ngIf="showNoDatasourceContent" class="rowmargin">
-              <div class="row col-12">
-                <div class="headercss textAlignment" style="color: #b4b4b4">
+              <div class="row col-12 headercss">
+                <div class=" textAlignment" style="color: #b4b4b4">
                   No DataSource Has been Added
                 </div>
               </div>
@@ -227,23 +327,25 @@
                   [hidden]="!entity.displayEntityTargetPanel"
                 >
                   <mat-expansion-panel-header>
-                    <mat-panel-title>
+                    <mat-panel-title class="entitystyle">
                       <img
+style="width:8%"
                         *ngIf="panel1.expanded"
-                        src="../../../assets/dash-circle.svg"
+                        src="../../../assets/Open arrow.svg"
                       />
                       <img
+style="width:8%"
                         *ngIf="!panel1.expanded"
-                        src="../../../assets/plus-circle.svg"
+                        src="../../../assets/close arrow.svg"
                       />
                       &nbsp;{{ entity.entityName }}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <table #table class="table table-striped">
+                  <table #table class="table">
                     <tbody *ngFor="let attr of entity.entityAttributes">
                       <tr *ngIf="attr.entityAttributeDisableFlag === true">
-                        <td>
+                        <td class="attrstyle">
                           {{ attr.attrName }}
                         </td>
                         <!-- <td>
@@ -292,30 +394,36 @@
                           <span
                             class="circletoimg"
                             *ngIf="enableFields === attr.attrSk"
-                            ><img
+                            ><span  
+                            [matTooltipPosition]="'below'"
+                            matTooltip="{{const?.saveDatatype}}"><img
                               (click)="onSave(attr, namechangeattrStr)"
                               id="pastchatview"
                               style="font-size: 1rem"
                               src="../../../assets/img/Save.svg"
-                          /></span>
+                          /></span></span>
                           <span
                             class="circletoimg"
                             *ngIf="enableFields !== attr.attrSk"
-                            ><img
+                            ><span  
+                            [matTooltipPosition]="'below'"
+                            matTooltip="{{const?.editTooltip}}"><img
                               (click)="editEntityAttribute(attr)"
                               id="pastchatview"
                               style="font-size: 1rem"
                               src="../../../assets/img/edit.svg" /></span
-                          >&nbsp;
+                          ></span>&nbsp;
                           <span class="circletoimg"
-                            ><img
+                            ><span  
+                            [matTooltipPosition]="'below'"
+                            matTooltip="{{const?.deleteTooltip}}"><img
                               (click)="
                                 deleteEntityAttribute(attr, entity, domain)
                               "
                               id="pastchatview"
                               style="font-size: 1rem"
                               src="../../../assets/img/delete.svg"
-                          /></span>
+                          /></span></span>
                         </td>
                       </tr>
                     </tbody>
@@ -369,21 +477,25 @@
                               >
                                 {{ op.columnCalName }} {{ op.columnFormula }}
                               </td>
-                              <td>
+                              <td style="padding-top:3%">
                                 <span class="circletoimg"
-                                  ><img
+                                  ><span  
+                                  [matTooltipPosition]="'below'"
+                                  matTooltip="{{const?.showFilterTooltip}}"><img
                                     (click)="onClickEditFilter(op)"
                                     id="pastchatview"
                                     style="font-size: 1rem"
                                     src="../../../assets/img/edit.svg" /></span
-                                >&nbsp;
+                                ></span>&nbsp;
                                 <span class="circletoimg"
-                                  ><img
+                                  ><span  
+                                  [matTooltipPosition]="'below'"
+                                  matTooltip="{{const?.deleteFilterTooltip}}"><img
                                     (click)="onClickDeleteFilter(op)"
                                     id="pastchatview"
                                     style="font-size: 1rem"
                                     src="../../../assets/img/delete.svg"
-                                /></span>
+                                /></span></span>
                               </td>
                             </tr>
                           </tbody>
@@ -433,19 +545,23 @@
 
                               <td>
                                 <span class="circletoimg"
-                                  ><img
+                                  ><span  
+                                  [matTooltipPosition]="'below'"
+                                  matTooltip="{{const?.editJoinTooltip}}"><img
                                     (click)="onClickEditJoin(op)"
                                     id="pastchatview"
                                     style="font-size: 1rem"
                                     src="../../../assets/img/edit.svg" /></span
-                                >&nbsp;
+                                ></span>&nbsp;
                                 <span class="circletoimg"
-                                  ><img
+                                  ><span  
+                                  [matTooltipPosition]="'below'"
+                                  matTooltip="{{const?.deleteJoinTooltip}}"><img
                                     (click)="onClickDeleteJoin(op)"
                                     id="pastchatview"
                                     style="font-size: 1rem"
                                     src="../../../assets/img/delete.svg"
-                                /></span>
+                                /></span></span>
                               </td>
                             </tr>
                           </tbody>
@@ -463,10 +579,14 @@
       <!-- preview and create manifest div starts here -->
       <div *ngIf="showRightPanel" class="row justify-content-end">
         <div class="col-2">
-          <button type="button" (click)="onJoinClick()" class="btn btn-primary" [disabled]="disableJoinBtn">
+          <span  
+            [matTooltipPosition]="'below'"
+            [matTooltip]="disableJoinBtn ? const.joinTooltip : const.joinTooltip"><button type="button" (click)="onJoinClick()" class="btn btn-primary" [disabled]="disableJoinBtn">
             Add Join</button
-          >&nbsp;&nbsp;
-
+          ></span>&nbsp;&nbsp;
+          <span  
+          [matTooltipPosition]="'below'"
+          [matTooltip]="disableFilterBtn ? const.filterTooltip : const.filterTooltip">
           <button
             type="button"
             [disabled]="disableFilterBtn"
@@ -474,7 +594,7 @@
             class="btn btn-primary"
           >
             Add Filter
-          </button>
+          </button></span>
         </div>
       </div>
       <!-- preview and create manifest div ends here -->

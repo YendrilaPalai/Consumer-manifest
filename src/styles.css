@@ -26,3 +26,16 @@ body {
 
   border-radius: 10px;
 }
+
+.mat-select-panel {
+  margin-top: 20% !important;
+  margin-left: 9.5% !important;
+}
+
+.mat-select-trigger {
+  margin-bottom: 5% !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  padding:0 0 0 0.75em !important;
+}

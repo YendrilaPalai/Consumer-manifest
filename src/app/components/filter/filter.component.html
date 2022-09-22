@@ -25,7 +25,7 @@
               (click)="clickOnManual()"
               [ngClass]="manualTabClicked === true ? 'blueClass' : ''"
             >
-              <div class="card-text">Advanced</div>
+              <div class="card-text">Advance</div>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@
             <form [formGroup]="myForm">
               <div class="row">
                 <div class="col-4">
-                  <label>Select a Data Source<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;">Select a Data Source<span class="asterisk">*</span></label>
 
                   <select
                     class="form-control mb-3"
@@ -150,7 +150,7 @@
                   </select>
                 </div>
                 <div class="col-4">
-                  <label>Select a Table<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;">Select a Table<span class="asterisk">*</span></label>
 
                   <select
                     class="form-control mb-3"
@@ -169,7 +169,7 @@
                   </select>
                 </div>
                 <div class="col-4">
-                  <label>Select a Column<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;">Select a Column<span class="asterisk">*</span></label>
 
                   <select class="form-control mb-3" formControlName="column" (change)="onChangeColumn($event)">
                     <option disabled selected value="">
@@ -186,7 +186,7 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <label>Select a Operator<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;">Select a Operator<span class="asterisk">*</span></label>
                   <select class="form-control mb-3" formControlName="operation">
                     <option disabled selected value="">
                       - Select a Operator -
@@ -200,11 +200,11 @@
                   </select>
                 </div>
                 <div class="col-6">
-                  <label for="number" style="color: #b4b4b4"
-                    >Min 0.5, Max 5</label
+                  <label for="number" style="color: #4f4f4f;"
+                    >Value</label
                   >
                   <input
-                    type="number"
+                    type="input"
                     formControlName="condition"
                     placeholder=""
                     class="form-control"
@@ -225,7 +225,17 @@
                 <input type="text" class="form-control" formControlName="columnCalName">
               </div> -->
               <div class="form-group">
-                <label>Enter Filter condition<span class="asterisk">*</span></label>
+                <label style="color: #4f4f4f;">Enter Filter condition<span class="asterisk">*</span>
+                  <span class="ml-2">
+                    <img
+                  [matTooltipPosition]="'right'"
+                  matTooltip="SELECT column1, column2, ...
+                  FROM table_name
+                  WHERE condition"
+                style="margin-right: 0%; height: 3vh"
+                src="../../../assets/img/Help.svg" />
+                  </span>
+                </label>
                 <textarea class="form-control" formControlName="columnFormula" rows="5"></textarea>
               </div>
             </form>
@@ -235,17 +245,24 @@
         <!-- clear and add/update button -->
         <div class="row justify-content-center" style="margin-top: 32px">
           <div class="col-12 text-center">
-            <button type="button" class="btn btn-primary" (click)="onClear()">
+            <span  
+            [matTooltipPosition]="'left'"
+            matTooltip="{{const?.clearTooltip}}"> <button type="button" class="btn btn-primary" (click)="onClear()">
               Clear</button
-            >&nbsp;&nbsp;
+            ></span>&nbsp;&nbsp;
+            <span  
+            [matTooltipPosition]="'right'"
+            matTooltip="{{const?.addTooltip}}"
+            >
             <button
+            [class.disable-btn]="isFormValid()"
               type="button"
               class="btn btn-primary"
               [disabled]="isFormValid()"
               (click)="onClickAddButton()"
             >
               {{ button }}
-            </button>
+            </button></span>
           </div>
         </div>
       </div>

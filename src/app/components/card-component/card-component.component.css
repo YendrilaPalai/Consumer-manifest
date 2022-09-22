@@ -8,3 +8,11 @@ float: right;
 .card-img-top{
     height: 17vh;
 }
+.mat-menu-item:hover {
+    background-color:#003b71 !important;
+    color: white !important
+}
+
+  .mat-menu-item:hover .mat-icon{
+    color:white !important
+  }

@@ -6,12 +6,12 @@
 <div class="container-fluid paddingcontainer">
   <div class="row">
     <div class="col-9 mt-3 mt-3" style="color: #003b71">
-      <strong>Publish</strong>
+      <strong>Schedule</strong>
     </div>
   </div>
 
   <div class="row mt-3">
-    <div class=" containerDesign">
+    <div class="containerDesign">
       <!-- basic and advance div starts here -->
       <div class="row">
         <div class="col-md-6" style="padding-right: 0px">
@@ -29,7 +29,7 @@
             (click)="clickOnManual()"
             [ngClass]="manualTabClicked === true ? 'blueClass' : ''"
           >
-            <div class="card-text">Advanced</div>
+            <div class="card-text">Advance</div>
           </div>
         </div>
       </div>
@@ -37,11 +37,17 @@
 
       <!--manifest name div starts here -->
       <div class="row mt-4">
-        <div class="col-md-1">
-          <h6
-            style="background-color: #e7f0f9; padding: 7px; font-weight: 600px"
-          >
-            {{selectedManifest}}
+        <div class="col-md-6">
+          <h6>
+            <span
+              style="
+                background-color: #e7f0f9;
+                padding: 7px;
+                font-weight: 600px;
+              "
+            >
+              {{ selectedManifest }}</span
+            >
           </h6>
         </div>
       </div>
@@ -50,40 +56,44 @@
       <ng-container>
         <form [formGroup]="scheduleForm">
           <!--date fields div starts here -->
-          <div class="row mb-4 mt-1" *ngIf="simpleTabClicked">
-            <div class="col-md-12" >
-              <div class="py-3 pl-2" style="border: 1px solid #e7e7e7">
-                <div class="row">
+          <div class="row mb-4 mt-1 ">
+            <div class="col-md-12">
+              <div class="py-3" style="border: 1px solid #e7e7e7;">
+                <div class="row pl-2 pr-2">
                   <div
                     class="col-md-5"
                     style="margin-top: 25px; font-style: italic; color: #b4b4b4"
                   >
                     Please set the Active Period of the job
                   </div>
+                  <div class="col-md-1"></div>
                   <div class="col-md-3">
-                    <label for="number" class="labelcss">Start Date<span class="asterisk">*</span></label>
+                    <label for="number" class="labelcss" style="color: #4f4f4f;"
+                      >Start Date<span class="asterisk">*</span></label
+                    >
                     <input
                       type="date"
                       formControlName="startdate"
                       placeholder=""
                       (change)="onStartDateChange($event)"
-                      min="{{date | date:'yyyy-MM-dd'}}"
+                      min="{{ startDateMin | date: 'yyyy-MM-dd' }}"
                       class="form-control"
                     />
                   </div>
-
-                  <div class="col-md-3">
-                    <label for="number" class="labelcss">End Date<span class="asterisk">*</span></label>
+                  <div class="col-md-3 ">
+                    <label for="number" class="labelcss"style="color: #4f4f4f;"
+                      >End Date<span class="asterisk">*</span></label
+                    >
                     <input
                       type="date"
                       formControlName="enddate"
                       placeholder=""
                       (change)="onEndDateChange($event)"
-                      min="{{endDateMin}}"
-                      class="form-control"
+                      min="{{ endDateMin | date: 'yyyy-MM-dd' }}"
+                      class="form-control "
                     />
                   </div>
-                  <div class="col-md-1"></div>
+                  
                 </div>
               </div>
             </div>
@@ -100,18 +110,16 @@
                 style="border: none"
                 (change)="onToggleGroupChange($event)"
                 [disabled]="tabgroupdisable"
-                
               >
-
                 <ng-container>
                   <mat-button-toggle
                     *ngFor="let tab of tabmap; let i = index"
                     value="{{ tab.id }}"
                     class="col-md-3"
-                    style="border: 2px solid #094a8a; border-radius: 0px"
-                    [checked]="tab.id == tabIndex ? true : false" 
+                    style="border: 1px solid #094a8a; border-radius: 0px"
+                    [checked]="tab.id == tabIndex ? true : false"
                   >
-                  <!-- [checked]="tab.id == 1 ? true : false" -->
+                    <!-- [checked]="tab.id == 1 ? true : false" -->
                     <div>
                       <label>{{ tab.tabname }}</label>
                     </div>
@@ -133,15 +141,16 @@
                     !yearlyTabSelected
                   "
                 >
-                <label style="color: #b4b4b4">Every(Hour)<span class="asterisk">*</span></label>
-
-                <select class="form-control mb-3" formControlName="everyHour">
-                  <option disabled selected value="">- Select a Hour -</option>
-                  <option
-                    *ngFor="let data of everyHour"
-                    [ngValue]="data"
+                  <label style="color: #4f4f4f"
+                    >Every(Hour)<span class="asterisk">*</span></label
                   >
-                    {{ data }}
+
+                  <select class="form-control mb-3" formControlName="everyHour">
+                    <option disabled selected value="">
+                      - Select a Hour -
+                    </option>
+                    <option *ngFor="let data of everyHour" [ngValue]="data">
+                      {{ data }}
                     </option>
                   </select>
                 </div>
@@ -150,7 +159,9 @@
                   class="col-md-3"
                   *ngIf="yearlyTabSelected || monthlyTabSelected"
                 >
-                  <label style="color: #b4b4b4">Repeat On The<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f"
+                    >Repeat On The<span class="asterisk">*</span></label
+                  >
 
                   <select
                     class="form-control mb-3"
@@ -167,7 +178,9 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="!hourlyTabSelected">
-                  <label style="color: #b4b4b4">On Day<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f"
+                    >On Day<span class="asterisk">*</span></label
+                  >
 
                   <select class="form-control mb-3" formControlName="onday">
                     <option disabled selected value="">- Select a Day -</option>
@@ -181,7 +194,9 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="yearlyTabSelected">
-                  <label style="color: #b4b4b4">On Month<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f"
+                    >On Month<span class="asterisk">*</span></label
+                  >
 
                   <select class="form-control mb-3" formControlName="onmonth">
                     <option disabled selected value="">
@@ -194,7 +209,9 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="yearlyTabSelected">
-                  <label style="color: #b4b4b4">At<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;margin-left: 4%;"
+                    >At<span class="asterisk">*</span></label
+                  >
 
                   <div class="row col-12">
                     <div class="col-md-4">
@@ -224,7 +241,9 @@
                 </div>
 
                 <div class="col-md-3" *ngIf="!yearlyTabSelected">
-                  <label style="color: #b4b4b4">Start Time<span class="asterisk">*</span></label>
+                  <label style="color: #4f4f4f;margin-left: 3%;" 
+                    >Start Time<span class="asterisk">*</span></label
+                  >
 
                   <div class="row col-12">
                     <div class="col-md-4">
@@ -257,16 +276,26 @@
               <!-- clear and add/update button -->
               <div class="row" style="margin-top: 32px; float: right">
                 <div class="col-12">
-                  <button type="button" class="btn btn-primary" (click)="onClear()">Clear</button
-                  >&nbsp;&nbsp;
+                  <span  
+                  [matTooltipPosition]="'above'"
+                  matTooltip="{{const.clearTooltip}}"> <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onClear()"
+                  >
+                    Clear</button
+                  ></span>&nbsp;&nbsp;
+                  <span  
+                  [matTooltipPosition]="'above'"
+                  matTooltip="{{const.scheduleTooltip}}">
                   <button
                     type="button"
                     class="btn btn-primary"
                     (click)="onClickOnPublish()"
                     [disabled]="!scheduleForm.valid"
                   >
-                    Schedule
-                  </button>
+                    {{ buttonName }}
+                  </button></span>
                 </div>
               </div>
             </div>
@@ -280,8 +309,17 @@
         <div class="row">
           <div class="container-fluid background-container">
             <form [formGroup]="publishAdvancedTabForm">
-              <div class="form-group row">
-                <label>Custom Cron Expression</label>
+              <fieldset class="form-group row" [disabled]="advanceFormdisable">
+                <label style="color: #4f4f4f;">Custom Cron Expression
+                  <img
+                  [matTooltipPosition]="'right'"
+                  matTooltipClass="example-tooltip-width"
+                  matTooltip="{{const?.cronTooltip}}"
+               class="ml-2"
+                style="margin-right: 0%; height: 3vh"
+                src="../../../assets/img/Help.svg" />
+              
+                </label>
                 <div class="col-md-10">
                   <input
                     class="form-control"
@@ -290,20 +328,23 @@
                   />
                 </div>
                 <div class="col-md-2">
+                 <span [matTooltipPosition]="'above'"
+                  matTooltip="{{const.validateTooltip}}">
                   <button
+                  [class.disable-btn]="isFormValid()"
                     class="btn btn-primary"
                     [disabled]="isFormValid()"
                     (click)="onClickValidate()"
                   >
                     Validate
-                  </button>
+                  </button></span>
                 </div>
-              </div>
+              </fieldset>
 
               <!-- just a testing div starts here -->
-              <div class="row col-md-11">
+              <div class="row " style="width: 90%; margin-left: 1px;">
                 <!-- <div class="col-md-12 text-center"> -->
-                <div class="headercss textAlignment" style="color: #b4b4b4">
+                <div class="headercss textAlignment" style="color: #4f4f4f">
                   {{ cronReadable }}
                 </div>
               </div>

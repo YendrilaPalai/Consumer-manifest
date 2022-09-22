@@ -12,6 +12,7 @@ import { Join } from 'src/app/interface/join-interface';
 import { Entity, EntityAttribute } from 'src/app/interface/split-interface';
 import { JoinDataService } from 'src/app/services/join-data.service';
 import { data } from 'jquery';
+import { Constants } from 'src/app/constants/constants';
 
 @Component({
   selector: 'app-join-page',
@@ -19,6 +20,7 @@ import { data } from 'jquery';
   styleUrls: ['./join-page.component.css'],
 })
 export class JoinPageComponent implements OnInit {
+  const:any={};
   operations: any = ['>', '<', '==', '!=', '>=', '<='];
   myJoinForm: FormGroup;
   leftcolumnList: any[] = [];
@@ -60,6 +62,11 @@ export class JoinPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.const["clearJoinTooltip"]=Constants.clickJoin;
+    this.const["addTooltip"]=Constants.addJoin;
+    this.const["editTooltip"]=Constants.editJoin;
+    this.const["deleteTooltip"]=Constants.deleteJoin;
+    this.const["updateTooltip"]=Constants.updateJoin;
     this.formIntitialization();
 
     this._splitwindowService

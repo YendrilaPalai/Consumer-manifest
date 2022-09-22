@@ -11,26 +11,30 @@ import cron from 'cron-validate';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from 'src/app/common/snackbar/snackbar.component';
 import { SplitwindowService } from 'src/app/services/splitwindow.service';
+import { formatDate } from '@angular/common';
+import { Constants } from 'src/app/constants/constants';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-schedule-page',
   templateUrl: './schedule-page.component.html',
   styleUrls: ['./schedule-page.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SchedulePageComponent implements OnInit {
   simpleTabClicked: boolean = true;
   manualTabClicked: boolean = false;
   value: any = 1;
-  selectedStDate:string;
-
-  selectedEnDate:string;
+  selectedStDate: string;
+  const:any={};
+  selectedEnDate: string;
   hourlyTabSelected: boolean = true;
   monthlyTabSelected: boolean = false;
   weeklyTabSelected: boolean = false;
   yearlyTabSelected: boolean = false;
   cronPieces: any;
   date: any;
-  startDateMin:any;
+  startDateMin: any;
   endDateMin: any;
 
   monthsOfYear = [
@@ -103,81 +107,152 @@ export class SchedulePageComponent implements OnInit {
     'December',
   ];
 
+  editedResponse: any = {};
   scheduleForm: FormGroup;
   publishAdvancedTabForm: FormGroup;
   selectedTab: any;
   cronReadable: string = 'Cron expressions as human readable text';
-  tabIndex: any = 1;
+  tabIndex: any = '';
   selectedManifest: any;
   startDateFilled: boolean = false;
   endDateFilled: boolean = false;
   showTheForm: boolean = false;
   tabgroupdisable: boolean = true;
+  advanceFormdisable: boolean = true;
   startDateValue: any;
   endDateValue: any;
+  buttonName = 'Schedule';
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
-    private _splitwindowService: SplitwindowService
+    private _splitwindowService: SplitwindowService,
+    private _apiService: ApiService,
   ) {}
 
   ngOnInit(): void {
+    this.const["clearTooltip"]=Constants.clearSchedule;
+    this.const["scheduleTooltip"]=Constants.scheduleData;
+    this.const["cronTooltip"]=Constants.cronSchedule;
+    this.const["cronTooltip1"]=Constants.cronExp1;
+    this.const["cronTooltip2"]=Constants.cronExp2;
+    this.const["cronTooltip3"]=Constants.cronExp3;
+    this.const["cronTooltip4"]=Constants.cronExp4;
+    this.const["validateTooltip"]=Constants.validate;
     this.formIntitialization();
-
+    this.advancedTabFormIntitialization();
+    this.buttonName = 'Schedule';
     this._splitwindowService
       .retrieveStoreSelectedPublishData()
       .subscribe((res: any) => {
-        this.selectedManifest = res.entityName;
-        this.selectedStDate=res.startDate;
-this.selectedEnDate=res.endDate;
+        console.log('restored',res);
+        this.editedResponse = res;
+        this.selectedManifest = res.manifestName;
+        this.selectedStDate = res.startDate;
+        this.selectedEnDate = res.endDate;
+        if (res.entitySk != 0) {
+          this.buttonName = 'Update';
+        }
 
-// this.scheduleForm.get('startdate')?.setValue(this.selectedStDate);
-//     this.scheduleForm.get('enddate')?.setValue(this.selectedEnDate);
+        this.selectedStDate
+          ? this.scheduleForm
+              .get('startdate')
+              ?.setValue(formatDate(this.selectedStDate, 'yyyy-MM-dd', 'en'))
+          : '';
+        this.selectedEnDate
+          ? this.scheduleForm
+              .get('enddate')
+              ?.setValue(formatDate('2022-12-22', 'yyyy-MM-dd', 'en'))
+          : '';
 
-let cornexpression =
-      res.cronExpr;
-    let isValidExp = cron(cornexpression , {
-      preset: 'default',
-      override: {
-        useYears: false,
-        useBlankDay: true,
-        useAliases: true,
-        useNthWeekdayOfMonth: true,
-        useLastDayOfMonth: true, // optional, default to false
-        useLastDayOfWeek: true, // optional, default to fals
-        useNearestWeekday: true, // optional, default to false
-      },
-    });
-    const validValue = isValidExp.getValue();
-    console.log(validValue);
-    var newString = new String(validValue.daysOfWeek);
-    if(validValue.daysOfWeek==="?"){
-      this.tabIndex=1;
-  this.onToggleGroupChange(this.tabIndex);
-  this.convertCronToTimeDaily(validValue);
-}
+        this.onStartDateChange(
+          formatDate(this.selectedStDate, 'yyyy-MM-dd', 'en')
+        );
+        this.onEndDateChange(
+          formatDate(this.selectedEnDate, 'yyyy-MM-dd', 'en')
+        );
 
-else if(!newString.includes("#")){
-  this.tabIndex=2;
-  this.onToggleGroupChange(this.tabIndex);
-  this.convertCronToTimeWeekly(validValue);
-}
+        let cornexpression = res.cronExpr;
+        let isValidExp = cron(cornexpression, {
+          preset: 'default',
+          override: {
+            useYears: false,
+            useBlankDay: true,
+            useAliases: true,
+            useNthWeekdayOfMonth: true,
+            useLastDayOfMonth: true, // optional, default to false
+            useLastDayOfWeek: true, // optional, default to fals
+            useNearestWeekday: true, // optional, default to false
+          },
+        });
+        const validValue = isValidExp.getValue();
+        var newString = new String(validValue.daysOfWeek);
 
-else if(newString.indexOf("#") && validValue.months==="*"){
-  this.tabIndex=3;
-  this.onToggleGroupChange(this.tabIndex);
-this.convertCronToTimeMonthly(validValue);
-
-}
-
-else if(validValue.months!=="*"){
-  this.tabIndex=4;
-  this.onToggleGroupChange(this.tabIndex);
- 
-}
+        //Daily 	*/5 * ? * *	    2 15 ? * 3	
+        console.log(validValue,"validval",cornexpression, ":: ",cornexpression.toString().includes('-'))
+        
+        if (validValue.daysOfWeek === '?' && !(validValue.hours).toString().includes('-') && cornexpression.toString().includes('-')==false ) {
+          this.manualTabClicked = false;
+          this.simpleTabClicked = true;
+          this.tabIndex = 1;
+          this.onToggleGroupChange(this.tabIndex);
+          this.convertCronToTimeDaily(validValue);
+        }
+        //Weekly 20 8 ? * 2L	
+        else if (
+          !newString.includes('#') &&!newString.includes('L') && 
+          !newString.includes('C') &&
+          validValue.daysOfMonth === '?' &&
+          validValue.months === '*' &&
+          !(validValue.minutes).toString().includes('/') 
+          && cornexpression.toString().includes('-')==false
+        ) {
+          this.manualTabClicked = false;
+          this.simpleTabClicked = true;
+          this.tabIndex = 2;
+          this.onToggleGroupChange(this.tabIndex);
+          this.convertCronToTimeWeekly(validValue);
+        }
+        //Monthly
+        else if (
+          newString.includes('#') &&
+          validValue.daysOfMonth === '?' &&
+          validValue.months === '*'
+          && cornexpression.toString().includes('-')==false
+        ) {
+          this.manualTabClicked = false;
+          this.simpleTabClicked = true;
+          this.tabIndex = 3;
+          this.onToggleGroupChange(this.tabIndex);
+          this.convertCronToTimeMonthly(validValue);
+        }
+        //yearly
+        else if (validValue.months !== '*' && validValue.daysOfMonth === '?' && cornexpression.toString().includes('-')==false) {
+          this.manualTabClicked = false;
+          this.simpleTabClicked = true;
+          this.tabIndex = 4;
+          this.onToggleGroupChange(this.tabIndex);
+          this.convertCronToTimeYearly(validValue);
+        } 
+      else {
+          this.manualTabClicked = true;
+          this.simpleTabClicked = false;
+          this.publishAdvancedTabForm
+            .get('cronExpression')
+            ?.setValue(cornexpression);
+        }
       });
 
-    this.date = new Date();
+    if (this.editedResponse.length == 0) {
+      this._splitwindowService.sendthescheduleName.subscribe((res) => {
+        if (res) {
+          console.log('sub',this.editedResponse);
+          let manifestDetails:any = localStorage.getItem('manifestDetails');
+          this.selectedManifest = res.fileName ? res.fileName : manifestDetails.manifestName;
+        }
+      });
+    }
+
+    this.startDateMin = new Date();
   }
 
   clickOnSimple() {
@@ -188,21 +263,26 @@ else if(validValue.months!=="*"){
     this.scheduleForm.get('enddate')?.setValue('');
     this.startDateFilled = false;
     this.endDateFilled = false;
+    this.advanceFormdisable = true;
+    this.onClear();
   }
 
   clickOnManual() {
     this.manualTabClicked = true;
     this.simpleTabClicked = false;
     this.advancedTabFormIntitialization();
-    this.tabgroupdisable=true;
-    this.showTheForm=false;
+    this.tabgroupdisable = true;
+    this.showTheForm = false;
     this.scheduleForm.get('startdate')?.setValue('');
     this.scheduleForm.get('enddate')?.setValue('');
     this.startDateFilled = false;
     this.endDateFilled = false;
+    this.tabIndex = -1;
+    this.onClear();
   }
 
   onClickOnPublish() {
+    
     let publishData: Publish = {} as Publish;
     let scheduledData: ScheduledData = {} as ScheduledData;
     scheduledData.selectedStartTime = {} as TimeStamp;
@@ -239,18 +319,41 @@ else if(validValue.months!=="*"){
     //   this.scheduleForm.get('numminuteet')?.value;
     // scheduledData.selectedEndTime.amorpm =
     //   this.scheduleForm.get('amORpmet')?.value;
-
-    console.log(scheduledData, 'scheduledData');
-
+    let targetCron:any;
     if (this.tabIndex == 3) {
-      this.convertTimeToCronMonthly(scheduledData);
+      targetCron = this.convertTimeToCronMonthly(scheduledData);
     } else if (this.tabIndex == 4) {
-      this.convertTimeToCronYearly(scheduledData);
+      targetCron = this.convertTimeToCronYearly(scheduledData);
     } else if (this.tabIndex == 2) {
-      this.convertTimeToCronWeekly(scheduledData);
+      targetCron = this.convertTimeToCronWeekly(scheduledData);
     } else if (this.tabIndex == 1) {
-      this.convertTimeToCronDaily(scheduledData);
+      targetCron = this.convertTimeToCronDaily(scheduledData);
     }
+    let manifestDetails:any = localStorage.getItem('manifestDetails');
+    manifestDetails.cronExpr = targetCron;
+    manifestDetails.status = "Active";
+    manifestDetails.startDate = scheduledData.selectedstartDate;
+    manifestDetails.endDate = scheduledData.selectedEndDate;
+    if(targetCron){
+      this._apiService
+    .publishManifest(manifestDetails)
+    .subscribe((response: any) => {
+      console.log('data', response);
+      if (response) {
+        this.successMessageInSnackbar("Manifest Status has been updated");
+      }
+    });
+    }
+    this.onClear();
+  }
+  successMessageInSnackbar(successmsg: any) {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      data: successmsg,
+      panelClass: ['custom-success'],
+      duration: 1000000,
+      verticalPosition: 'top', // Allowed values are  'top' | 'bottom'
+      horizontalPosition: 'right', // Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'
+    });
   }
   onBackClick() {
     this.router.navigate(['/publish']);
@@ -315,19 +418,14 @@ else if(validValue.months!=="*"){
       let readable = cronstrue.toString(cornexpression);
       this.cronReadable = readable;
       const validValue = isValidExp.getValue();
-      console.log('check now', cornexpression, readable, validValue);
     } else {
       let errorValue = isValidExp.getError();
-      // The error value contains an array of strings, which represent the cron validation errors.
       console.log(errorValue); // string[] of error messages
       this.errorMessageInSnackbar(errorValue[0]);
-      //this.toastrService.error(errorValue[0], 'Error!');
     }
 
-    this._splitwindowService.storeSelectedCronData({
-      crondataschedule: cornexpression,
-      advancedTabClicked: this.manualTabClicked,
-    });
+    this.sendEditedData(cornexpression);
+    this.onClear();
   }
 
   errorMessageInSnackbar(errormsg: any) {
@@ -394,23 +492,19 @@ else if(validValue.months!=="*"){
     this.cronPieces[5] = repeatWeek + '#' + repeatData;
 
     //YEAR
-    let yeartoset = '';
-    if (job.selectedstartDate) {
-      const startDateArr = job.selectedstartDate.split('-');
-      if (startDateArr[0]) {
-        yeartoset = startDateArr[0];
-      }
-      this.cronPieces[6] = yeartoset;
-    }
+    // let yeartoset = '';
+    // if (job.selectedstartDate) {
+    //   const startDateArr = job.selectedstartDate.split('-');
+    //   if (startDateArr[0]) {
+    //     yeartoset = startDateArr[0];
+    //   }
+    //   this.cronPieces[6] = yeartoset;
+    // }
     this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
-    console.log(this.cronPieces, 'cron');
-    this._splitwindowService.storeSelectedCronData({
-      crondataschedule: this.cronPieces,
-      advancedTabClicked: this.manualTabClicked,
-    });
 
-    //return this.cronPieces.join(' ');
+    this.sendEditedData(this.cronPieces);
+    return this.cronPieces;
   }
 
   convertTimeToCronMonthly(job: any) {
@@ -438,7 +532,7 @@ else if(validValue.months!=="*"){
         }
       } else if (job.selectedStartTime.hours === 12) {
         hourstart = '12';
-      } else {
+      } else if (job.selectedStartTime.amorpm === 'PM') {
         hourstart = job.selectedStartTime.hours + 12;
       }
     }
@@ -474,26 +568,26 @@ else if(validValue.months!=="*"){
     this.cronPieces[5] = repeatWeek + '#' + repeatData;
 
     //YEAR
-    let yeartoset = '';
-    let monthtoset = '';
-    if (job.selectedstartDate) {
-      const startDateArr = job.selectedstartDate.split('-');
-      if (startDateArr[0]) {
-        yeartoset = startDateArr[0];
-        monthtoset = startDateArr[1];
-      }
-      this.cronPieces[6] = yeartoset;
-      this.cronPieces[4] = monthtoset;
-    }
+    // let yeartoset = '';
+    // let monthtoset = '';
+    // if (job.selectedstartDate) {
+    //   const startDateArr = job.selectedstartDate.split('-');
+    //   if (startDateArr[0]) {
+    //     yeartoset = startDateArr[0];
+    //     monthtoset = startDateArr[1];
+    //   }
+    //   //this.cronPieces[6] = yeartoset;
+    //   this.cronPieces[4] = monthtoset;
+    // }
     this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
-    console.log(this.cronPieces, 'cron');
     this._splitwindowService.storeSelectedCronData({
       crondataschedule: this.cronPieces,
       advancedTabClicked: this.manualTabClicked,
     });
 
-    //return this.cronPieces.join(' ');
+    this.sendEditedData(this.cronPieces);
+    return this.cronPieces;
   }
 
   convertTimeToCronWeekly(job: any) {
@@ -571,11 +665,14 @@ else if(validValue.months!=="*"){
     // }
     this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
-    console.log(this.cronPieces, 'cron');
     this._splitwindowService.storeSelectedCronData({
       crondataschedule: this.cronPieces,
       advancedTabClicked: this.manualTabClicked,
     });
+
+    //creating the entity for edit
+    this.sendEditedData(this.cronPieces);
+    return this.cronPieces;
 
     //return this.cronPieces.join(' ');
   }
@@ -653,107 +750,138 @@ else if(validValue.months!=="*"){
     // }
     this.cronPieces.splice(0, 1);
     this.cronPieces = this.cronPieces.join(' ');
-    console.log(this.cronPieces, 'cron');
     this._splitwindowService.storeSelectedCronData({
       crondataschedule: this.cronPieces,
       advancedTabClicked: this.manualTabClicked,
     });
 
+    //creating the entity for edit
+    this.sendEditedData(this.cronPieces);
+    return this.cronPieces;
+
     //return this.cronPieces.join(' ');
   }
 
-convertCronToTimeDaily(job:any){
-    console.log("from cron to time",job);
-    let jobstrttime=job.hours.split('/');
-    let everyhour=Number(jobstrttime[1]);
-    let strttimehr=Number(jobstrttime[0])
-    let strttimemin=Number(job.minutes);
-    if(strttimehr>12){
-    let final = strttimehr-12;
-    this.scheduleForm.get('numhourst')?.setValue(final);
-    this.scheduleForm.get('amORpmst')?.setValue("PM");
-    }
-    else{
+  convertCronToTimeDaily(job: any) {
+    let jobstrttime = job.hours.split('/');
+    let everyhour = Number(jobstrttime[1]);
+    let strttimehr = Number(jobstrttime[0]);
+    let strttimemin = Number(job.minutes);
+    if (strttimehr > 12) {
+      let final = strttimehr - 12;
+      this.scheduleForm.get('numhourst')?.setValue(final);
+      this.scheduleForm.get('amORpmst')?.setValue('PM');
+    } else {
       this.scheduleForm.get('numhourst')?.setValue(strttimehr);
-    this.scheduleForm.get('amORpmst')?.setValue("AM");
+      this.scheduleForm.get('amORpmst')?.setValue('AM');
     }
-  
- //let eh1= this.everyHour.find((eh:number)=>eh===everyhour);
-  //   let evryhr1=[];
-  // evryhr1.push(everyhour);
+
+    //let eh1= this.everyHour.find((eh:number)=>eh===everyhour);
+    //   let evryhr1=[];
+    // evryhr1.push(everyhour);
     this.scheduleForm.get('everyHour')?.setValue(everyhour);
     this.scheduleForm.get('numminutest')?.setValue(strttimemin);
-    
-    
-    
-    
   }
 
-  convertCronToTimeWeekly(job:any){
-   // let onDay=Number(job.daysOfWeek);
+  convertCronToTimeWeekly(job: any) {
     this.daysOfWeek.forEach((week: any) => {
       if (Number(job.daysOfWeek) === week.id) {
         let onDay = week.name;
         this.scheduleForm.get('onday')?.setValue(onDay);
       }
     });
-    let strttimemin=job.minutes;
-    if(job.hours>12){
-      let strttimehr=job.hours-12;
+    let strttimemin = job.minutes;
+    if (job.hours > 12) {
+      let strttimehr = job.hours - 12;
       this.scheduleForm.get('numhourst')?.setValue(strttimehr);
-      this.scheduleForm.get('amORpmst')?.setValue("PM");
+      this.scheduleForm.get('amORpmst')?.setValue('PM');
+    } else {
+      let strttimehr = job.hours;
+      this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+      this.scheduleForm.get('amORpmst')?.setValue('AM');
     }
-    else{
-let strttimehr=job.hours;
-this.scheduleForm.get('numhourst')?.setValue(strttimehr);
-this.scheduleForm.get('amORpmst')?.setValue("AM");
-    }
-   
+
     this.scheduleForm.get('numminutest')?.setValue(strttimemin);
-
   }
 
-convertCronToTimeMonthly(job:any){
+  convertCronToTimeMonthly(job: any) {
+    let dayOfweek = job.daysOfWeek.split('#');
+    let onDay = Number(dayOfweek[0]);
+    let repeatOnThe = Number(dayOfweek[1]);
+    let strttimehr = Number(job.hours);
+    let strttimemin = Number(job.minutes);
 
-let dayOfweek= job.daysOfWeek.split('#');
-let onDay=Number(dayOfweek[0]);
-let repeatOnThe=Number(dayOfweek[1]);
-let strttimehr=Number(job.hours);
-let strttimemin=Number(job.minutes);
+    this.repeatOnWeek.forEach((data: any) => {
+      if (repeatOnThe === data.id) {
+        let repeatData = data.name;
+        this.scheduleForm.get('repeatonthe')?.setValue(repeatData);
+      }
+    });
 
-this.repeatOnWeek.forEach((data: any) => {
-  if (repeatOnThe === data.id) {
-   let repeatData = data.name;
-   this.scheduleForm.get('repeatonthe')?.setValue(repeatData);
+    this.daysOfWeek.forEach((week: any) => {
+      if (onDay === week.id) {
+        let onDayName = week.name;
+        this.scheduleForm.get('onday')?.setValue(onDayName);
+      }
+    });
+
+    if (strttimehr > 12) {
+      let finalstrtimehr = strttimehr - 12;
+      this.scheduleForm.get('numhourst')?.setValue(finalstrtimehr);
+      this.scheduleForm.get('amORpmst')?.setValue('PM');
+    } else {
+      this.scheduleForm.get('numhourst')?.setValue(strttimehr);
+      this.scheduleForm.get('amORpmst')?.setValue('AM');
+    }
+
+    this.scheduleForm.get('numminutest')?.setValue(strttimemin);
   }
-});
 
-this.daysOfWeek.forEach((week: any) => {
-  if (onDay === week.id) {
-    let onDayName = week.name;
-    this.scheduleForm.get('onday')?.setValue(onDayName);
+  convertCronToTimeYearly(job: any) {
+    let dayOfweek = job.daysOfWeek.split('#');
+    let onDay = Number(dayOfweek[0]);
+    let repeatOnThe = Number(dayOfweek[1]);
+    let onMonth = Number(job.months);
+    let strttimehr = Number(job.hours);
+    let strttimemin = Number(job.minutes);
+
+    this.repeatOnWeek.forEach((data: any) => {
+      if (repeatOnThe === data.id) {
+        let repeatData = data.name;
+        this.scheduleForm.get('repeatonthe')?.setValue(repeatData);
+      }
+    });
+
+    this.daysOfWeek.forEach((week: any) => {
+      if (onDay === week.id) {
+        let onDayName = week.name;
+        this.scheduleForm.get('onday')?.setValue(onDayName);
+      }
+    });
+    this.monthsOfYear.forEach((month: any) => {
+      if (onMonth === month.id) {
+        let onMonthName = month.name;
+        this.scheduleForm.get('onmonth')?.setValue(onMonthName);
+      }
+    });
+
+    if (strttimehr > 12) {
+      let finalstrtimehr = strttimehr - 12;
+      this.scheduleForm.get('numhouryr')?.setValue(finalstrtimehr);
+      this.scheduleForm.get('amORpmyr')?.setValue('PM');
+    } else {
+      this.scheduleForm.get('numhouryr')?.setValue(strttimehr);
+      this.scheduleForm.get('amORpmyr')?.setValue('AM');
+    }
+    this.scheduleForm.get('numminuteyr')?.setValue(strttimemin);
   }
-});
 
-if(strttimehr>12){
- let finalstrtimehr= strttimehr-12;
-  this.scheduleForm.get('numhourst')?.setValue(finalstrtimehr);
-      this.scheduleForm.get('amORpmst')?.setValue("PM");
-}
-else{
-  this.scheduleForm.get('numhourst')?.setValue(strttimehr);
-      this.scheduleForm.get('amORpmst')?.setValue("AM");
-}
-
-this.scheduleForm.get('numminutest')?.setValue(strttimemin);
-
-  }
   onStartDateChange(event: any) {
     this.scheduleForm.get('enddate')?.setValue('');
     this.startDateValue = this.scheduleForm.get('startdate')?.value;
-    this.startDateMin = this.date;
-    this.endDateMin = event.target.value;
-    
+    this.startDateMin = this.date ? this.date : event;
+    this.endDateMin = event.target ? event.target.value : event;
+
     if (
       this.scheduleForm.get('startdate')?.value !== null ||
       this.scheduleForm.get('startdate')?.value !== ''
@@ -763,13 +891,22 @@ this.scheduleForm.get('numminutest')?.setValue(strttimemin);
 
     if (this.startDateFilled && this.endDateFilled) {
       this.tabgroupdisable = false;
+      this.advanceFormdisable = false;
     } else {
       this.tabgroupdisable = true;
+      this.advanceFormdisable = true;
     }
   }
 
   onEndDateChange(event: any) {
-    this.endDateValue = this.scheduleForm.get('enddate')?.value;
+    this.selectedEnDate
+      ? this.scheduleForm
+          .get('enddate')
+          ?.setValue(formatDate(this.selectedEnDate, 'yyyy-MM-dd', 'en'))
+      : '';
+    this.endDateValue = this.scheduleForm.get('enddate')?.value
+      ? this.scheduleForm.get('enddate')?.value
+      : event;
     if (
       this.scheduleForm.get('enddate')?.value !== null ||
       this.scheduleForm.get('enddate')?.value !== ''
@@ -778,43 +915,36 @@ this.scheduleForm.get('numminutest')?.setValue(strttimemin);
     }
     if (this.startDateFilled && this.endDateFilled) {
       this.tabgroupdisable = false;
+      this.advanceFormdisable = false;
     } else {
       this.tabgroupdisable = true;
+      this.advanceFormdisable = true;
     }
   }
 
   onToggleGroupChange(event: any) {
     this.showTheForm = true;
     this.tabIndex = event.value ? event.value : event;
-    console.log('tab', this.tabIndex);
     this.formIntitialization();
     this.scheduleForm.get('startdate')?.setValue(this.startDateValue);
     this.scheduleForm.get('enddate')?.setValue(this.endDateValue);
- if(this.tabIndex==1){
+    if (this.tabIndex == 1) {
       this.hourlyTabSelected = true;
       this.weeklyTabSelected = false;
       this.monthlyTabSelected = false;
       this.yearlyTabSelected = false;
       //this.scheduleForm.controls['everyHour']=12
-      
-    }
-
-    else if(this.tabIndex==2){
+    } else if (this.tabIndex == 2) {
       this.hourlyTabSelected = false;
       this.weeklyTabSelected = true;
       this.monthlyTabSelected = false;
       this.yearlyTabSelected = false;
-     
-    }
-
-    else if(this.tabIndex==3){
+    } else if (this.tabIndex == 3) {
       this.hourlyTabSelected = false;
       this.weeklyTabSelected = false;
       this.monthlyTabSelected = true;
       this.yearlyTabSelected = false;
-    }
-
-    else if(this.tabIndex==4){
+    } else if (this.tabIndex == 4) {
       this.hourlyTabSelected = false;
       this.weeklyTabSelected = false;
       this.monthlyTabSelected = false;
@@ -926,7 +1056,6 @@ this.scheduleForm.get('numminutest')?.setValue(strttimemin);
       );
 
       this.scheduleForm.controls['onmonth'].updateValueAndValidity();
-
       this.scheduleForm.controls['onmonth'].clearValidators();
       this.scheduleForm.controls['selectedday'].updateValueAndValidity();
       this.scheduleForm.controls['selectedday'].clearValidators();
@@ -959,8 +1088,55 @@ this.scheduleForm.get('numminutest')?.setValue(strttimemin);
     }
   }
 
-  onClear(){
+  onClear() {
     this.formIntitialization();
     this.advancedTabFormIntitialization();
+    this.tabgroupdisable = true;
+    this.advanceFormdisable = true;
+    this.showTheForm = false;
+    this.startDateFilled = false;
+    this.endDateFilled = false;
+    this.tabIndex = -1;
+    this.buttonName = 'Schedule';
+    this._splitwindowService.publishManifestData.next([]);
   }
+
+  sendEditedData(cornexpression: any) {
+    let editschedule: NewSchedule = {} as NewSchedule;
+    if (this.editedResponse.editedFlag == true) {
+      editschedule.cronExpr = cornexpression;
+      editschedule.editedFlag = true;
+      editschedule.editedIndex = this.editedResponse.editedIndex;
+      editschedule.endDate = this.scheduleForm.get('enddate')?.value;
+      editschedule.entityName = this.editedResponse.entityName;
+      editschedule.flag = this.editedResponse.flag;
+      editschedule.publish = '';
+      editschedule.startDate = this.scheduleForm.get('startdate')?.value;
+    } else {
+      editschedule.cronExpr = cornexpression;
+      editschedule.editedFlag = false;
+      editschedule.editedIndex = '';
+      editschedule.endDate = this.scheduleForm.get('enddate')?.value;
+      editschedule.entityName = this.selectedManifest;
+      editschedule.flag = true;
+      editschedule.publish = '';
+      editschedule.startDate = this.scheduleForm.get('startdate')?.value;
+    }
+
+    this._splitwindowService.storeSelectedCronData({
+      crondataschedule: editschedule,
+      advancedTabClicked: this.manualTabClicked,
+    });
+  }
+}
+
+interface NewSchedule {
+  entityName: string;
+  cronExpr: string;
+  publish: string;
+  flag: boolean;
+  startDate: string;
+  endDate: string;
+  editedFlag: boolean;
+  editedIndex: any;
 }

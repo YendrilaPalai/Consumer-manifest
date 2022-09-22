@@ -4,6 +4,73 @@
   height: 50vh;
 }
 
+.searchbtnstyle{
+  width:60%;
+
+}
+.headerDivider {
+  border-left:1px solid #38546d; 
+  border-right:1px solid #16222c; 
+  height:100%;
+  position:absolute;
+  margin-left: 30px;
+  /* right:249px;
+  top:10px;  */
+  
+}
+.divider-style{
+  height:100%;
+  color:black;
+  margin-right:50%;
+  
+
+}
+
+
+.form-control:disabled {
+  background-color: #9C9C9C;
+}
+
+.label-style{
+  color: #4F4F4F;
+  font-size: 16px;
+}
+
+.domain-style{
+  font-size: 16px;
+}
+
+
+.save-btn-style{
+  margin-left: 15%;
+  width: 40%;
+  height: 30%;
+}
+.schedule-btn-style{
+ 
+  height: 30%;
+}
+
+
+.entitystyle{
+  font-size: 16px;
+}
+.attrstyle{
+  font-size: 16px;
+}
+
+.text-control-style{
+  width:102%
+}
+
+input::placeholder {
+  
+  color: #4F4F4F !important;
+}
+
+.example-headers-align{
+  width:100%
+}
 .circletoimg {
   border: 2px solid rgb(223 227 233);
   padding: 1%;
@@ -63,7 +130,15 @@ table {
 .containerDesign {
   border: 2px solid #31618c;
   padding: 8px;
+  }
+  
+  .containerDesignleft{
+  border: 2px solid #31618c;
+  padding: 8px;
+  margin-right: 8%;
 }
+
+
 
 .overflow-scrollbar {
   overflow-y: auto;
@@ -90,6 +165,8 @@ table {
 .headercss {
   background-color: #e7f0f9;
   padding: 10px;
+font-size: 16px;
+  margin-right: 8%;
 }
 
 ::ng-deep .mat-form-field-flex {

@@ -20,9 +20,13 @@
   background-color: #003b71;
   color: white;
 }
+.disable-btn {
+  background-color: #9c9c9c;
+  border: none;
+ }
 
 .background-container {
-  background-color: #827f7f0f;
+  background-color: #E7F0F9;
   margin-top: 44px;
   padding: 24px;
   /* margin-left: 12px; */

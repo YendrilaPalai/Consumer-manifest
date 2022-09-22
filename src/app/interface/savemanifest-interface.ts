@@ -1,26 +1,41 @@
 export interface EntityAttributeSave {
-  attrSk: number;
-  attrName: string;
-  attrDesc: string;
   attrComment: string;
-  entitySrc: string;
-  domainSrc: string;
-  dataType: string;
+  attrDesc: string;
   attrLength: number;
-  position: number;
-  colGrpName: string;
+  attrName: string;
+  attrSk: number;
+  attrTags: string;
   colGrpLvl: string;
-  createTs: number;
-  lastUpdtTs: number;
+  colGrpName: string;
+  createTs: Date;
+  dataType: string;
+  defaultValue: string;
+  domainSrc: string;
+  entitySrc: string;
+  lastUpdtTs: Date;
+  position: number;
   tgtValSrcJson: string;
+  tgtValSrcOthr: string;
+  tgtValSrcSql: string;
 }
 
 export interface EntitySave {
-  entitySk: number;
-  entityId: string;
-  entityName: string;
-  entityDesc: string;
-  entitySrc: string;
-  sourceType: string;
+  consId: number;
+  createTs: Date;
+  cronExpr: string;
+  domainId: number;
+  domainName: string;
   entityAttributes: EntityAttributeSave[];
+  entityTypeId: string;
+  expression: string;
+  lastUpdtTs: Date;
+  locationId: string;
+  manifestDesc: string;
+  manifestId: number;
+  manifestName: string;
+  manifestSrc: string;
+  sourceType: string;
+  startDate: Date;
+  endDate: Date;
+  status: string;
 }

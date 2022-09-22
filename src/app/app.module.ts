@@ -40,7 +40,8 @@ import { SchedulePageComponent } from './components/schedule-page/schedule-page.
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SnackbarComponent } from './common/snackbar/snackbar.component';
-
+import { ProgressBarComponent } from './common/progress-bar/progress-bar.component';
+import {MatTooltipModule} from '@angular/material/tooltip'
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +58,9 @@ import { SnackbarComponent } from './common/snackbar/snackbar.component';
     PublishPageComponent,
     SuccessPopupComponent,
     SchedulePageComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    ProgressBarComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -83,7 +86,8 @@ import { SnackbarComponent } from './common/snackbar/snackbar.component';
     ScrollingModule,
     MatSlideToggleModule,
     MatTabsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   providers: [{ provide: Requestor, useValue: new FetchRequestor()},
     { provide: 'AuthorizationConfig', useValue: environment},AuthorizationService],

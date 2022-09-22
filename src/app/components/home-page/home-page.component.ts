@@ -29,11 +29,14 @@ export class HomePageComponent implements OnInit {
   finalmanifests: any[] = [];
 
   manifests: any[] = [];
+  loadSpinner: boolean = false;
 
   ngOnInit(): void {
+    this.loadSpinner = true;
     this._apiService.getAllManifest().subscribe((response: any) => {
       this.manifests = response;
       this.finalmanifests = this.manifests;
+      this.loadSpinner = false;
     });
     this.myForm = new FormGroup({
       search: new FormControl(''),

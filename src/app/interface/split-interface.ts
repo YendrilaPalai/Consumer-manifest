@@ -10,6 +10,7 @@ export interface Domainn {
   createTs?: number
   selected:boolean;
   displayDomainTargetPanel:boolean;
+  tag: boolean;
   lastUpdtTs?: number
   entities: Entity[]
 }
@@ -28,6 +29,7 @@ export interface Entity {
   displayEntityTargetPanel:boolean;
   createTs?: number
   lastUpdtTs?: number
+  tag: boolean;
   entityAttributes: EntityAttribute[]
 }
 
@@ -41,6 +43,7 @@ export interface EntityAttribute {
   position: number
   defaultValue?: string
   entityAttributeDisableFlag:boolean
+  tag: boolean;
   attrTags?: string
   colGrpName: string
   colGrpLvl: string

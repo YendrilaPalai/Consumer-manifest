@@ -11,6 +11,15 @@
 .card-border {
   border: 1px solid #003b71;
 }
+::ng-deep .custom-success{
+  background-color:green;
+  color:white;
+}
+
+::ng-deep .custom-style{
+  background-color:brown;
+  color:white;
+}
 
 .card-text {
   text-align: center;
@@ -25,6 +34,10 @@
   background-color: #003b71;
   color: white;
 }
+.disable-btn {
+  background-color: #9c9c9c;
+  border: none;
+ }
 
 .paddingcontainer {
   padding-left: 40px;
@@ -36,9 +49,17 @@
   padding: 10px;
 }
 
+::ng-deep .custom-success{
+  background-color:green;
+  color:white;
+}
+
 ::ng-deep .custom-style{
   background-color:brown;
   color:white;
+}
+.example-tooltip-width{
+  max-width: 80% !important;
 }
 
 .background-container {
@@ -55,7 +76,7 @@
 }
 .mat-button-toggle-disabled.mat-button-toggle-appearance-standard {
   background: #9a9a9a94;
-  border:2px solid grey !important;
+  border:1px solid grey !important;
 }
 
 /** No CSS for this example */

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Constants } from 'src/app/constants/constants';
 import { Filter } from 'src/app/interface/filter-interface';
 import {
   Domainn,
@@ -15,6 +16,7 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./filter.component.css'],
 })
 export class FilterComponent implements OnInit {
+  const:any={};
   simpleTabClicked: boolean = true;
   manualTabClicked: boolean = false;
   myForm: FormGroup;
@@ -45,6 +47,8 @@ export class FilterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.const["addTooltip"]=Constants.addFilter;
+    this.const["clearTooltip"]=Constants.clearFilter;
     console.log(this.data.prevoperation);
     this.formIntitialization();
     this.advancedTabFormIntitialization();
@@ -146,7 +150,7 @@ export class FilterComponent implements OnInit {
       console.log('data', response.listofdatatype);
       this.listofdatatype = response.listofdatatype;
       this.listofdatatype.forEach((eachDataType: any) => {
-        if (eachDataType.type === filterAttr[0].dataType) {
+        if (eachDataType.dataTypes.some((f:any)=>f.toLowerCase() === (filterAttr[0].dataType).toLowerCase())) {
           this.operations = eachDataType.operators;
         }
       });

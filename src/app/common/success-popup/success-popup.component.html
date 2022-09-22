@@ -13,16 +13,60 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <form>
-          <div class="row">
+        <form [formGroup]="successPopUpForm">
+          <div class="row mb-3">
             <div class="col-12">
+              <label style="color: #b4b4b4"
+                >Manifest Name<span class="asterisk">*</span></label
+              >
               <input
                 type="text"
                 class="form-control"
                 placeholder="Manifest Name"
                 name="filename"
-                [(ngModel)]="fileName"
+                formControlName="fileName"
               />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12">
+              <label style="color: #b4b4b4"
+                >Target Consumer Name<span class="asterisk">*</span></label
+              >
+
+              <select
+                class="form-control mb-3"
+                formControlName="targetConsumer"
+              >
+                <option disabled selected value="">
+                  - Select a Consumer Name -
+                </option>
+                <option
+                  *ngFor="let data of getListOfConsumersData"
+                  [ngValue]="data"
+                >
+                  {{ data.consName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-12">
+              <label style="color: #b4b4b4"
+                >Target Domain Name<span class="asterisk">*</span></label
+              >
+
+              <select class="form-control mb-3" formControlName="targetDomain">
+                <option disabled selected value="">
+                  - Select a Domain Name -
+                </option>
+                <option
+                  *ngFor="let data of getListOfDomainsData"
+                  [ngValue]="data"
+                >
+                  {{ data.domainName }}
+                </option>
+              </select>
             </div>
           </div>
         </form>
@@ -31,9 +75,14 @@
   </div>
   <div class="container-fluid" style="margin-top: 40px">
     <div class="row justify-content-center">
-     
-        <button type="button" class="btn btn-primary col-8" (click)="saveFileDetails()">Save</button>
-    
+      <button
+        type="button"
+        class="btn btn-success col-8"
+        (click)="saveFileDetails()"
+        [disabled]="!successPopUpForm.valid"
+      >
+        Save
+      </button>
     </div>
   </div>
 </mat-dialog-content>

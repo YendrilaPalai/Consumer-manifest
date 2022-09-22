@@ -4,92 +4,100 @@
 </div>
 <div class="qnA-hr-line" *ngIf="!schedulepageFlag"></div>
 <br />
-<div class="container-fluid paddingcontainer">
-  <div class="row" *ngIf="!schedulepageFlag">
-    <div class="col-8" style="color: #003b71">
-      <strong class="ml-3">Search a Manifest</strong>
-      <input
-        type="text"
-        class="form-control ml-2 search-style"
-        [(ngModel)]="searchManifest"
-        placeholder="Search manifest"
-      />
+<div class="container-fluid">
+  <div class="row paddingcontainerbox" *ngIf="!schedulepageFlag" >
+    <div class="col-4">
+      <label class="pt-3 lab-sty ">Search a Manifest</label>
+      <input type="text" class="form-control" [(ngModel)]="searchManifest">
     </div>
-    <div class="col-4" style="color: #003b71">
-      <strong>Show</strong>
-      <select
-        class="form-control dropdown-style"
-        [(ngModel)]="dropdown2"
+    <div class="col-4"></div>
+    <div class="col-4">
+      <label class="pt-3 lab-sty">Show</label>
+         <select
+        class="form-control "
+        [(ngModel)]="scheduleStatus"
         (change)="changeAction($event)"
       >
-        <!-- <option disabled selected value=""></option> -->
+        <!-- <option disabled selected value=""> All</option> -->
         <option *ngFor="let sortItem of operations" [value]="sortItem.name">
           {{ sortItem.name }}
         </option>
-      </select>
+      </select> 
     </div>
   </div>
+
+  
   <br />
-  <div class="row mt-3" style="padding-bottom:30px ;">
+  <div class="row mt-3 paddingcontainer" style="padding-bottom:30px ;">
     <div class="headercss col-12">
 <span style="height:30px ;overflow-y:auto;">
         <table class="table">
           <thead>
             <tr>
               <!-- <th>Id</th> -->
-              <th>Name</th>
-              <th>Schedule</th>
-              <th style="width: 598px;">Publish details</th>
-              <th>Status</th>
-              <th>Active</th>
-              <th>Actions</th>
+              <th style="width: 20%;">Manifest Name</th>
+              <th style="width: 20%;">Schedule</th>
+              <th style="width:40%;">Publish details</th>
+              <th style="width: 10%;">Status</th>
+              <!-- <th>Active</th> -->
+              <th style="width: 10%;">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of newPublish | filterpipe: searchManifest">
+            <tr *ngFor="let user of publishData | filterpipe: searchManifest;let i = index">
               <!-- <td>{{ user.id }}</td> -->
               <!-- <td>{{ user.name }}</td>
               <td>{{ user.schedule }}</td> -->
               <!-- <td>{{ user.publish }}</td> -->
               <!-- <td >{{publishListVal}}</td> -->
-              <td>{{user.entityName}}</td>
-              <td>{{user.cronExpr}}</td>
-              <td style="width: 598px;">{{user.publish}}</td>
               
-              <td *ngIf="user.publish !== 'Not available'">
+              <td style="width: 20%;">{{user.manifestName}}</td>
+              <td style="width: 20%;"><span *ngIf="user.cronExpr" style="background-color: #d9d9d9;padding:5px;border-radius: 5px;">{{user.cronExpr}}</span></td>
+              <td style="width: 40%;">{{cronToReadable(user.cronExpr)}}</td>
+              
+              <td style="width: 10%;" *ngIf="user.status !== ('InActive')">
                 <mat-slide-toggle
-                  [checked]="user.flag"
-                  (change)="updateActiveStatus(user)"
+                  [checked]="user.status === 'Active'||user.status=='Published'"
+                  (change)="updateActiveStatus(user,$event)"
                 ></mat-slide-toggle>
+                <mat-label class="labelcss" *ngIf="user.status=='InActive'">Off</mat-label>
+                <mat-label class="labelcss" *ngIf="user.status=='Active'||user.status=='Published'">On</mat-label>
+
               </td>
               <!-- <td *ngIf="user.publish !== 'Not available'">
                 {{ user.status }}
               </td> -->
-              <td>{{user.flag}}</td>
-              <td *ngIf="user.publish !== 'Not available'">
+              <!-- <td>{{user.flag}}</td> -->
+              <td style="width: 10%;" *ngIf="user.status !== 'InActive'">
                 <span class="circletoimg">
+                  <span [matTooltipPosition]="'below'"
+                  matTooltip="{{const?.editTooltip}}">
                 <img
                   id="pastchatview"
                   style="width: 20px; height: 20px"
                   src="../../../assets/img/edit.svg"
-                  (click)="editPublish(user)"
+                  (click)="editPublish(user ,i)"
                 />
-              </span>
+              </span></span>
                 &nbsp;
                 <span class="circletoimg">
+                  <span [matTooltipPosition]="'below'"
+                          matTooltip="{{const?.deleteTooltip}}">
                 <img
                   id="pastchatview"
                   style="width: 20px; height: 20px"
                   src="../../../assets/img/delete.svg"
+                  (click)="onClickDeletePublish(user ,i)"
                 />
-                </span>
+                </span></span>
               </td>
-              <td *ngIf="user.publish === 'Not available'">
-                <button class="btn btn-primary">Publish</button>
+              <td *ngIf="user.status === 'InActive'|| !user?.status ">
+                <button (click)="onPublishClick(user)" class="btn btn-primary">Schedule</button>
               </td>
             </tr>
           </tbody>
         </table>
+      
       </span>
     </div>
   </div>
